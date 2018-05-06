@@ -1,0 +1,24 @@
+﻿<Window x:Class="Inventory.Popups.ProductEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Inventory.Popups"
+        mc:Ignorable="d"
+        Title="Edit Product" SizeToContent="Height" Width="600" ResizeMode="NoResize">
+    <DockPanel Height="auto" >
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0">
+            <TextBlock FontSize="18" Text="Product Name" Width="150"  Margin="5,5,5,5" />
+            <TextBox x:Name="EnglishNameField" FontSize="18" HorizontalAlignment="Stretch" Margin="5,5,5,5" MinWidth="100"/>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0">
+            <TextBlock FontSize="18" Text="Product Interal ID" Width="150" Margin="5,5,5,5" />
+            <TextBlock x:Name="InternalIDField" FontSize="18" HorizontalAlignment="Stretch" Margin="5,5,5,5" MinWidth="100"/>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Height="40" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,0,5,0">
+            <Button Content="Edit" FontSize="18" Margin="5,5,5,5" Padding="5,0,5,0" Click="OKButton_Click" />
+            <Button Content="Cancel" FontSize="18" Margin="5,5,5,5" Padding="5,0,5,0" IsCancel="True" HorizontalAlignment="Stretch" />
+        </StackPanel>
+        <CheckBox x:Name="IsActiveCheckbox" Content="Is Active product" IsChecked="False" Margin="5,0,0,0"/>
+    </DockPanel>
+</Window>

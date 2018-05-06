@@ -1,0 +1,16 @@
+﻿<Window x:Class="Inventory.Popups.PartDelDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Inventory.Popups"
+        mc:Ignorable="d"
+        Title="Delete Part" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <DockPanel Height="auto" >
+        <TextBlock Name="promptText" Padding="10,10,10,0" DockPanel.Dock="Top" TextWrapping="WrapWithOverflow" FontSize="18" MaxWidth="400" Text="Are you sure you want to delete "  Margin="5,5,5,5" />
+        <StackPanel DockPanel.Dock="Bottom" Height="40" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,10,15,10">
+            <Button Content="Delete" Margin="5,5,5,5" FontSize="18" Padding="5,0,5,0" Click="OKButton_Click" />
+            <Button Content="Cancel" Margin="5,5,5,5" FontSize="18" Padding="5,0,5,0" IsCancel="True" HorizontalAlignment="Stretch" />
+        </StackPanel>
+    </DockPanel>
+</Window>
