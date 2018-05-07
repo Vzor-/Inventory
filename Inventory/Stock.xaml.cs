@@ -41,10 +41,10 @@ namespace Inventory
             var target = gridList[index];
             //Make and add new item
             var newLocation = Location.NewItem((Location.LocationType)index , parentID);
-            DatabaseConnection.addLocation(newLocation);
+            if (newLocation != null) DatabaseConnection.addLocation(newLocation);
             //Update the table and clear all lower tables
             target.ItemsSource = DatabaseConnection.getLocationsInLocation((Location.LocationType)index, parentID);
-            for (index++ ; index < 4; index++)
+            for (index++; index < 4; index++)
             {
                 target = gridList[index];
                 target.ItemsSource = null;
