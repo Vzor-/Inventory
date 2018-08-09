@@ -11,20 +11,26 @@
             <TabItem Header="  Home  ">
                 <local:Home/>
             </TabItem>
-            <TabItem Header="  Products  ">
-                <local:Products/>
+            <TabItem Header="  Recipes  ">
+                <local:Recipes/>
             </TabItem>
             <TabItem Header="  Stock  ">
                 <local:Stock/>
             </TabItem>
             <TabItem Header="  Jobs  ">
-                <Grid Background="#FFE5E5E5"/>
+                <local:Jobs/>
             </TabItem>
-            <TabItem Header="  Orders  ">
+            <TabItem Header="  Sourcing  ">
+                <local:Sourcing/>
+            </TabItem>
+            <TabItem Header="  Fulfillment  ">
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
             <TabItem Header="  Losses  ">
                 <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="  Reports  ">
+                <local:Reports/>
             </TabItem>
         </TabControl>
 

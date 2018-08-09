@@ -15,39 +15,18 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DataGrid Name="summaryGrid" Grid.RowSpan="2" Margin="5" VerticalAlignment="Top">
-        </DataGrid>
-        <Grid Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <DataGrid Name="BuildingGrid" Grid.Row="1" VerticalAlignment="Top" Margin="5" SelectionChanged="Grid_SelectionChanged">
-            </DataGrid>
-            <DataGrid Name="ShelfGrid" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" SelectionChanged="Grid_SelectionChanged">
-            </DataGrid>
-            <DataGrid Name="BinGrid" Grid.Column="2" Grid.Row="1" VerticalAlignment="Top" Margin="5" SelectionChanged="Grid_SelectionChanged">
-            </DataGrid>
-            <DataGrid Name="PartitionGrid" Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" Margin="5" SelectionChanged="Grid_SelectionChanged">
-            </DataGrid>
-            <Button x:Name="addBuilding" Grid.Row="0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="add_Click"/>
-            <Button x:Name="delBuilding" Grid.Row="0" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="del_Click"/>
-            <Button x:Name="addShelf" Grid.Row="0" Grid.Column="1" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="add_Click"/>
-            <Button x:Name="delShelf" Grid.Row="0" Grid.Column="1" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="del_Click"/>
-            <Button x:Name="addBin" Grid.Row="0" Grid.Column="2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="add_Click"/>
-            <Button x:Name="delBin" Grid.Row="0" Grid.Column="2" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="del_Click"/>
-            <Button x:Name="addPartition" Grid.Row="0" Grid.Column="3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="add_Click"/>
-            <Button x:Name="delPartition" Grid.Row="0" Grid.Column="3" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="5,0,5,0" Click="del_Click"/>
+        <Grid Grid.Column="0" Grid.ColumnSpan="1">
+            <DataGrid Name="stockSummaryGrid" Margin="10,31,10,10" SelectionChanged="stockSummaryGrid_SelectionChanged" SelectionMode="Single"/>
+            <TextBlock Grid.Row="0" Text="Parts" Margin="10,10,10,300" Foreground="#FF878787" />
         </Grid>
-        <Image x:Name="image" Grid.Column="1" Grid.Row="1" Source="SimpleLogoDim.png" />
-        <DataGrid Name="areaGrid" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="5">
-        </DataGrid>
+        <Grid Grid.Column="1" Grid.ColumnSpan="1">
+            <local:LocationsView x:Name="locationsViewer"  />
+        </Grid>
+        <Image x:Name="image" Grid.Column="1" Grid.Row="1" Source="SimpleLogoDim.png" Grid.ColumnSpan="2" />
+        <DataGrid Name="stockInLocation" Grid.Row="1" Grid.Column="1" Margin="10,31,10,10" RenderTransformOrigin="0.515,-1.077"  SelectionChanged="stockInLocationsDataGrid_SelectionChanged"/>
+        <DataGrid x:Name="stockLocations" Grid.Row="1" Margin="10,31,10,10" RenderTransformOrigin="0.515,-1.077" SelectionChanged="stockLocationsDataGrid_SelectionChanged"/>
+        <TextBlock Grid.Row="1" Text="Stock of Part" Margin="10,10,10,301" Foreground="#FF878787" Grid.Column="0"  />
+        <TextBlock Grid.Row="1" Text="Parts in Location" Margin="10,10,10,301" Foreground="#FF878787" Grid.Column="1" />
 
     </Grid>
 </UserControl>

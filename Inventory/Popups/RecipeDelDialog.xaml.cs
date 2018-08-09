@@ -17,10 +17,10 @@ namespace Inventory.Popups
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class ProductDelDialog : Window
+    public partial class RecipeDelDialog : Window
     {
         public bool isDelete = false;
-        public ProductDelDialog(string EnglishName, string InternalID)
+        public RecipeDelDialog(string EnglishName, string InternalID)
         {
             InitializeComponent();
             promptText.Text += "\"" + EnglishName + "\" ID: " + InternalID + "?";

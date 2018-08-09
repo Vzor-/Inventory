@@ -14,13 +14,16 @@ using System.Windows.Shapes;
 
 namespace Inventory.Popups
 {
-    public partial class ProductAddDialog : Window
+    public partial class RecipeEditDialog : Window
     {
         public string EnglishName, InternalID;
         public bool isClean = false, IsActive;
-        public ProductAddDialog()
+        public RecipeEditDialog(string EnglishName, string InternalID, bool IsActive)
         {
             InitializeComponent();
+            EnglishNameField.Text = EnglishName;
+            InternalIDField.Text = InternalID;
+            IsActiveCheckbox.IsChecked = IsActive;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

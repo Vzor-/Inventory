@@ -6,66 +6,71 @@ using System.Windows.Controls;
 
 namespace Inventory
 {
-    public partial class Products : UserControl
+    public partial class Recipes : UserControl
     {
-        public Products()
+        public Recipes()
         {
             InitializeComponent();
-            productGrid.ItemsSource = DatabaseConnection.getProducts();
-            partsGrid.ItemsSource = DatabaseConnection.getParts();
-        }
 
-        private void addProductButton_Click(object sender, RoutedEventArgs e)
-        {
-            ProductAddDialog dialog = new ProductAddDialog();
-            dialog.ShowDialog();
-            if (dialog.isClean)
+            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
-                DatabaseConnection.addProduct(new DataTypes.Product(
-                    dialog.EnglishName,
-                    dialog.InternalID,
-                    dialog.IsActive));
-                productGrid.ItemsSource = DatabaseConnection.getProducts();
+                //Code that throws the exception
+                recipeGrid.ItemsSource = DatabaseConnection.getRecipes();
+                partsGrid.ItemsSource = DatabaseConnection.getParts();
             }
         }
 
-        private void productGrid_MouseDown(object sender, SelectionChangedEventArgs e)
+        private void addRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (productGrid.SelectedIndex != -1)
+            RecipeAddDialog dialog = new RecipeAddDialog();
+            dialog.ShowDialog();
+            if (dialog.isClean)
             {
-                delProductButton.IsEnabled = true;
-                editProductButton.IsEnabled = true;
+                DatabaseConnection.addRecipe(new DataTypes.Recipe(
+                    dialog.EnglishName,
+                    dialog.InternalID,
+                    dialog.IsActive));
+                recipeGrid.ItemsSource = DatabaseConnection.getRecipes();
+            }
+        }
+
+        private void RecipeGrid_MouseDown(object sender, SelectionChangedEventArgs e)
+        {
+            if (recipeGrid.SelectedIndex != -1)
+            {
+                delRecipeButton.IsEnabled = true;
+                editRecipeButton.IsEnabled = true;
                 updateHasParts();
             }
         }
 
-        private void delProductButton_Click(object sender, RoutedEventArgs e)
+        private void delRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            var s = (DataTypes.Product)productGrid.SelectedItem;
+            var s = (DataTypes.Recipe)recipeGrid.SelectedItem;
 
-            ProductDelDialog dialog = new ProductDelDialog(s.EnglishName, s.InternalID);
+            RecipeDelDialog dialog = new RecipeDelDialog(s.EnglishName, s.InternalID);
             dialog.ShowDialog();
             if (dialog.isDelete)
             {
-                delProductButton.IsEnabled = false;
-                editProductButton.IsEnabled = false;
-                DatabaseConnection.delProduct(s);
-                productGrid.ItemsSource = DatabaseConnection.getProducts();
+                delRecipeButton.IsEnabled = false;
+                editRecipeButton.IsEnabled = false;
+                DatabaseConnection.delRecipe(s);
+                recipeGrid.ItemsSource = DatabaseConnection.getRecipes();
             }
         }
 
-        private void editProductButton_Click(object sender, RoutedEventArgs e)
+        private void editRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            var s = (DataTypes.Product)productGrid.SelectedItem;
+            var s = (DataTypes.Recipe)recipeGrid.SelectedItem;
 
-            ProductEditDialog dialog = new ProductEditDialog(s.EnglishName, s.InternalID, s.IsActive);
+            RecipeEditDialog dialog = new RecipeEditDialog(s.EnglishName, s.InternalID, s.IsActive);
             dialog.ShowDialog();
             if (dialog.isClean)
             {
                 s.EnglishName = dialog.EnglishName;
                 s.IsActive = dialog.IsActive;
-                DatabaseConnection.editProduct(s);
-                productGrid.ItemsSource = DatabaseConnection.getProducts();
+                DatabaseConnection.editRecipe(s);
+                recipeGrid.ItemsSource = DatabaseConnection.getRecipes();
             }
         }
 
@@ -99,7 +104,7 @@ namespace Inventory
             {
                 delPartButton.IsEnabled = false;
                 editPartButton.IsEnabled = false;
-                delFromProduct.IsEnabled = false;
+                delFromRecipe.IsEnabled = false;
                 DatabaseConnection.delPart(s);
                 partsGrid.ItemsSource = DatabaseConnection.getParts();
             }
@@ -122,36 +127,36 @@ namespace Inventory
 
         private void updateHasParts()
         {
-            string partName = ((DataTypes.Product)productGrid.SelectedItem).EnglishName;
+            string partName = ((DataTypes.Recipe)recipeGrid.SelectedItem).EnglishName;
             HasPartText.Text = "\"" + partName + "\" Has Parts";
-            HasPartsGrid.ItemsSource = DatabaseConnection.getProductHasPart(getProductID());
+            HasPartsGrid.ItemsSource = DatabaseConnection.getRecipeHasPart(getRecipeID());
         }
 
-        private void addToProduct_Click(object sender, RoutedEventArgs e)
+        private void addToRecipe_Click(object sender, RoutedEventArgs e)
         {
-            DatabaseConnection.addProductHasPart(
-                (DataTypes.Product)productGrid.SelectedItem, 
+            DatabaseConnection.addRecipeHasPart(
+                (DataTypes.Recipe)recipeGrid.SelectedItem, 
                 (DataTypes.Part)partsGrid.SelectedItem);
-            HasPartsGrid.ItemsSource = DatabaseConnection.getProductHasPart(getProductID());
+            HasPartsGrid.ItemsSource = DatabaseConnection.getRecipeHasPart(getRecipeID());
         }
 
-        private void delFromProduct_Click(object sender, RoutedEventArgs e)
+        private void delFromRecipe_Click(object sender, RoutedEventArgs e)
         {
-            DatabaseConnection.delProductHasPart(
-                (DataTypes.Product)productGrid.SelectedItem,
+            DatabaseConnection.delRecipeHasPart(
+                (DataTypes.Recipe)recipeGrid.SelectedItem,
                 (DataTypes.Part)partsGrid.SelectedItem);
-            HasPartsGrid.ItemsSource = DatabaseConnection.getProductHasPart(getProductID());
-            delFromProduct.IsEnabled = false;
+            HasPartsGrid.ItemsSource = DatabaseConnection.getRecipeHasPart(getRecipeID());
+            delFromRecipe.IsEnabled = false;
         }
 
-        private string getProductID()
+        private string getRecipeID()
         {
-            return ((DataTypes.Product)productGrid.SelectedItem).InternalID;
+            return ((DataTypes.Recipe)recipeGrid.SelectedItem).InternalID;
         }
 
         private void HasPartsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            delFromProduct.IsEnabled = true;
+            delFromRecipe.IsEnabled = true;
             HasPartsGrid.Columns[0].IsReadOnly = true;
             HasPartsGrid.Columns[1].IsReadOnly = true;
         }
@@ -160,11 +165,11 @@ namespace Inventory
         {
             if (e.EditAction == DataGridEditAction.Commit)
             {
-                var s = (DataTypes.ProductHasPart)HasPartsGrid.Items.GetItemAt(e.Row.GetIndex());
+                var s = (DataTypes.RecipeHasPart)HasPartsGrid.Items.GetItemAt(e.Row.GetIndex());
                 try
                 {
                     int count = Int32.Parse(((TextBox)e.EditingElement).Text);
-                    DatabaseConnection.editProductHasPart(getProductID(), s.PartID, count);
+                    DatabaseConnection.editRecipeHasPart(getRecipeID(), s.PartID, count);
                 } catch (Exception)
                 {
                     e.Cancel = true;

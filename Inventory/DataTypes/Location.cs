@@ -37,15 +37,27 @@ namespace Inventory.DataTypes
             GeneralDialog gd = new GeneralDialog();
             gd.setTitle("Add " + locationType);
             var name = gd.addSimpleField(locationType + " name");
-            var button = gd.addSimpleButtons("Add");
+            //name.Focus(); 
+            
 
+            var button = gd.addSimpleButtons("Add");
+            button.TabIndex = 0;
             button.Click += delegate {
                 returnPart = new Location(name.Text, locationType, -1, parentID);
                 gd.Close();
+            };
+
+            gd.PreviewKeyUp += (object sender, System.Windows.Input.KeyEventArgs e) => {
+                if (e.Key == System.Windows.Input.Key.Return)
+                {
+                    button.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Button.ClickEvent));
+
+                }
             };
             gd.ShowDialog();
 
             return returnPart;
         }
+        
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Inventory.DataTypes
 {
-    public class Product
+    public class Recipe
     {
         public string EnglishName { get; set; }
         public string InternalID { get; set; }
         public bool IsActive { get; set; }
 
-        public Product (string EnglishName, string InternalID, bool IsActive)
+        public Recipe(string EnglishName, string InternalID, bool IsActive)
         {
             this.EnglishName = EnglishName;
             this.InternalID = InternalID;

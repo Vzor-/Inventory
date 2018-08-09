@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using Inventory.DataTypes;
+using System.Collections;
 
 namespace Inventory
 {
@@ -30,36 +31,58 @@ namespace Inventory
             dbConnection.Close();
         }
 
-        #region products
-        public static bool addProduct(Product product)
+
+        #region Recipes
+        public static bool addRecipe(Recipe Recipe)
         {
-            return doProductCommand(product,
-            "INSERT INTO Products (EnglishName, InternalID, IsActive) " +
+            return doRecipeCommand(Recipe,
+            "INSERT INTO Recipes (EnglishName, InternalID, IsActive) " +
                 "VALUES (@EnglishName, @InternalID, @IsActive)");
         }
 
-        public static bool editProduct(Product product)
+        internal static IEnumerable getStock()
         {
-            return doProductCommand(product,
-            "UPDATE Products SET " +
+            List<DataTypes.Stock> p = new List<DataTypes.Stock>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT PartID, OrderID, Count, Location FROM Stock ",
+                dbConnection);
+            //SQLiteCommand command = new SQLiteCommand(
+            //    "SELECT Parts.EnglishName, Stock.Count, Parts.InternalID, Parts.IsEOL " +
+            //    "FROM Parts " +
+            //    "Left JOIN Stock ON Parts.InternalID = Stock.PartID " +
+            //    "ORDER BY Parts.EnglishName; ",
+            //    dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                p.Add(new DataTypes.Stock(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
+            }
+            return p;
+        }
+
+
+        public static bool editRecipe(Recipe Recipe)
+        {
+            return doRecipeCommand(Recipe,
+            "UPDATE Recipes SET " +
                 "EnglishName = @EnglishName, " +
                 "IsActive = @IsActive " +
                 "WHERE InternalID = @InternalID");
         }
 
-        public static bool delProduct(Product product)
+        public static bool delRecipe(Recipe Recipe)
         {
-            return doProductCommand(product, 
-                "DELETE FROM Products " +
+            return doRecipeCommand(Recipe, 
+                "DELETE FROM Recipes " +
                     "WHERE InternalID = @InternalID");
         }
 
-        private static bool doProductCommand(Product product, string commandText)
+        private static bool doRecipeCommand(Recipe Recipe, string commandText)
         {
             SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
-            command.Parameters.AddWithValue("EnglishName", product.EnglishName);
-            command.Parameters.AddWithValue("InternalID", product.InternalID);
-            command.Parameters.AddWithValue("IsActive", product.IsActive);
+            command.Parameters.AddWithValue("EnglishName", Recipe.EnglishName);
+            command.Parameters.AddWithValue("InternalID", Recipe.InternalID);
+            command.Parameters.AddWithValue("IsActive", Recipe.IsActive);
             try
             {
                 return (command.ExecuteNonQuery() > 0);
@@ -71,18 +94,175 @@ namespace Inventory
             return false;
         }
 
-        public static List<Product> getProducts()
+
+        public static List<Recipe> getRecipes()
         {
-            List<Product> p = new List<Product>();
+            List<Recipe> p = new List<Recipe>();
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT EnglishName, InternalID, IsActive FROM Products",
+                "SELECT EnglishName, InternalID, IsActive FROM Recipes",
                 dbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new Product(reader.GetString(0), reader.GetString(1), reader.GetBoolean(2)));
+                p.Add(new Recipe(reader.GetString(0), reader.GetString(1), reader.GetBoolean(2)));
             }
             return p;
+        }
+
+
+        public static List<DataTypes.Stock> getLocationsOfStock(DataTypes.Stock item)
+        {
+            List<DataTypes.Stock> s = new List<DataTypes.Stock>();
+            String id = item.PartID;
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT PartID, OrderID, Count, Location FROM Stock " +
+                "WHERE PartID = @id",
+                dbConnection);
+            command.Parameters.AddWithValue("@id", id);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                s.Add(new DataTypes.Stock(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
+            }
+
+            return s;
+        }
+
+        #endregion
+
+        #region Stock
+
+        internal static void AddStock(DataTypes.Stock item)
+        {
+            SQLiteCommand command = new SQLiteCommand(
+            "INSERT INTO Stock (PartID, OrderID, Location, Count) " +
+                "VALUES (@partID, @orderID, @location, @count)",
+                dbConnection);
+            command.Parameters.AddWithValue("@partID", item.PartID);
+            command.Parameters.AddWithValue("@orderID", item.OrderID);
+            command.Parameters.AddWithValue("@location", item.Location);
+            command.Parameters.AddWithValue("@count", item.Count);
+            
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
+        internal static void updateStockLocation(DataTypes.Stock item)
+        {
+            String commandText =
+            "UPDATE Stock SET " +
+                "Location = @Location "+
+                "WHERE PartID = @PartID AND " +
+                "OrderID = @OrderID";
+            SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+            command.Parameters.AddWithValue("PartID", item.PartID);
+            command.Parameters.AddWithValue("OrderID", item.OrderID);
+            command.Parameters.AddWithValue("Location", item.Location);
+
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
+        #endregion
+
+        #region Orders
+
+        internal static List<OrderPart> findPartsInOrder(Order order)
+        {
+            List<OrderPart> parts = new List<OrderPart>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM OrderHasPart " +
+                "WHERE OrderID = @orderID",
+                dbConnection);
+            command.Parameters.AddWithValue("@orderID", order.orderID);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                parts.Add(new OrderPart(reader.GetString(0), reader.GetString(1), reader.GetInt32(2)));
+            }
+            return parts;
+        }
+
+        internal static void updateOrder(Order item, string parameter, bool v)
+        {
+            // check that Order has parameter, protect from SQL injection like parameterization??
+            if (item.GetType().GetProperty(parameter) != null)
+            {
+                String commandText = String.Format("UPDATE Orders SET {0} = @state WHERE InternalID = @InternalID", parameter);
+                SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+                command.Parameters.AddWithValue("@InternalID", item.orderID);
+                command.Parameters.AddWithValue("@state", v);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
+        }
+
+        public static List<Order> getOrders()
+        {
+            List<Order> orders = new List<Order>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM Orders",
+                dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            //System.Console.Out.WriteLine(command.ToString());
+            while (reader.Read())
+            {
+                orders.Add(new Order(reader.GetString(0), reader.GetBoolean(1), reader.GetBoolean(2), reader.GetBoolean(3), reader.GetString(4), reader.GetString(5)));
+            }
+            return orders;
+        }
+
+        public static string addOrder(Order order)
+        {
+            String returnMsg = "Passed";
+            SQLiteCommand command = new SQLiteCommand(
+            "INSERT INTO Orders (InternalID, approved, ordered, recived, orderedDate, expectedDate) " +
+                "VALUES (@InternalID, @approved, @ordered, @recived, @orderedDate, @expectedDate)",
+                dbConnection);
+            command.Parameters.AddWithValue("@InternalID", order.orderID);
+            command.Parameters.AddWithValue("@approved", order.Approved);
+            command.Parameters.AddWithValue("@ordered", order.Ordered);
+            command.Parameters.AddWithValue("@recived", order.Recived);
+            command.Parameters.AddWithValue("@orderedDate", order.orderedDate);
+            command.Parameters.AddWithValue("@expectedDate", order.expectedDate);
+            try
+            {
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
+            catch (SQLiteException ex)
+            {
+                returnMsg = ex.Message;
+                if (ex.Message.Contains("UniqueConstraint"))
+                {
+                    //returnMsg = "UniqueConstraintError";
+                }
+                //throw new UniqueConstraintException();
+
+            }
+            finally
+            {
+
+            }
+
+            return returnMsg;
+        }
+
+        internal static void addPartsToOrder(Order order, List<DataTypes.OrderPart> pendingStockOrder)
+        {
+            foreach (var item in pendingStockOrder)
+            {
+                SQLiteCommand command = new SQLiteCommand(
+                "INSERT INTO OrderHasPart (OrderID, PartID, Count) " +
+                    "VALUES (@OrderID, @PartID, @Count)",
+                    dbConnection);
+                command.Parameters.AddWithValue("@OrderID", order.orderID);
+                command.Parameters.AddWithValue("@PartID", item.PartID);
+                command.Parameters.AddWithValue("@Count", item.Count);
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
+
+
         }
         #endregion
 
@@ -140,18 +320,19 @@ namespace Inventory
             }
             return p;
         }
+
         #endregion
 
-        #region product has part
-        public static bool addProductHasPart(Product Product, Part part)
+        #region Recipe has part
+        public static bool addRecipeHasPart(Recipe Recipe, Part part)
         {
             SQLiteCommand command = new SQLiteCommand(
-                "INSERT INTO ProductHasPart " +
-                "(PartID, ProductID, Count) " +
-                "VALUES (@PartID, @ProductID, @Count)",
+                "INSERT INTO RecipeHasPart " +
+                "(PartID, RecipeID, Count) " +
+                "VALUES (@PartID, @RecipeID, @Count)",
                 dbConnection);
             command.Parameters.AddWithValue("PartID", part.InternalID);
-            command.Parameters.AddWithValue("ProductID", Product.InternalID);
+            command.Parameters.AddWithValue("RecipeID", Recipe.InternalID);
             command.Parameters.AddWithValue("Count", 1);
             try
             {
@@ -164,15 +345,15 @@ namespace Inventory
             return false;
         }
 
-        public static bool delProductHasPart(Product Product, Part part)
+        public static bool delRecipeHasPart(Recipe Recipe, Part part)
         {
             SQLiteCommand command = new SQLiteCommand(
-                "DELETE FROM ProductHasPart " +
+                "DELETE FROM RecipeHasPart " +
                 "WHERE PartID = @PartID AND " +
-                "ProductID = @ProductID",
+                "RecipeID = @RecipeID",
                 dbConnection);
             command.Parameters.AddWithValue("PartID", part.InternalID);
-            command.Parameters.AddWithValue("ProductID", Product.InternalID);
+            command.Parameters.AddWithValue("RecipeID", Recipe.InternalID);
             try
             {
                 return (command.ExecuteNonQuery() > 0);
@@ -184,16 +365,16 @@ namespace Inventory
             return false;
         }
 
-        public static bool editProductHasPart(string ProductID, string partID, int Count)
+        public static bool editRecipeHasPart(string RecipeID, string partID, int Count)
         {
             SQLiteCommand command = new SQLiteCommand(
-                "UPDATE ProductHasPart SET " +
+                "UPDATE RecipeHasPart SET " +
                 "Count = @Count " +
                 "WHERE PartID = @PartID AND " +
-                "ProductID = @ProductID",
+                "RecipeID = @RecipeID",
                 dbConnection);
             command.Parameters.AddWithValue("PartID", partID);
-            command.Parameters.AddWithValue("ProductID", ProductID);
+            command.Parameters.AddWithValue("RecipeID", RecipeID);
             command.Parameters.AddWithValue("Count", Count);
             try
             {
@@ -206,19 +387,19 @@ namespace Inventory
             return false;
         }
 
-        public static List<ProductHasPart> getProductHasPart(string ProductID)
+        public static List<RecipeHasPart> getRecipeHasPart(string RecipeID)
         {
-            List<ProductHasPart> p = new List<ProductHasPart>();
+            List<RecipeHasPart> p = new List<RecipeHasPart>();
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT Parts.EnglishName, Parts.InternalID, ProductHasPart.Count FROM ProductHasPart " +
+                "SELECT Parts.EnglishName, Parts.InternalID, RecipeHasPart.Count FROM RecipeHasPart " +
                 "INNER JOIN Parts ON Parts.InternalID = PartID " +
-                "WHERE ProductID = @ProductID",
+                "WHERE RecipeID = @RecipeID",
                 dbConnection);
-            command.Parameters.AddWithValue("ProductID", ProductID);
+            command.Parameters.AddWithValue("RecipeID", RecipeID);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new ProductHasPart(reader.GetString(0), reader.GetString(1), reader.GetInt32(2)));
+                p.Add(new RecipeHasPart(reader.GetString(0), reader.GetString(1), reader.GetInt32(2)));
             }
             return p;
         }

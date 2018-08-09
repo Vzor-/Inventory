@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Inventory.LocationsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Inventory"
+             mc:Ignorable="d" d:DesignWidth="800" Height="332.386">
+    <Grid Margin="0,0,0,10">
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" MinHeight="49"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <DataGrid Name="BuildingGrid" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" SelectionChanged="Grid_SelectionChanged" Height="262" Drop="BuildingGrid_Drop">
+            </DataGrid>
+            <DataGrid Name="ShelfGrid" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" SelectionChanged="Grid_SelectionChanged" Height="262" Drop="ShelfGrid_Drop">
+            </DataGrid>
+            <DataGrid Name="BinGrid" Grid.Column="2" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" SelectionChanged="Grid_SelectionChanged" Height="262" Drop="BinGrid_Drop">
+            </DataGrid>
+            <DataGrid Name="PartitionGrid" Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" SelectionChanged="Grid_SelectionChanged" Height="262" Drop="PartitionGrid_Drop">
+            </DataGrid>
+            <Button x:Name="addBuilding" Grid.Row="0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,27,0,0" Click="add_Click" Height="20"/>
+            <Button x:Name="delBuilding" Grid.Row="0" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="0,27,5,0" Click="del_Click" Height="20"/>
+            <Button x:Name="addShelf" Grid.Row="0" Grid.Column="1" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,27,0,0" Click="add_Click" Height="20"/>
+            <Button x:Name="delShelf" Grid.Row="0" Grid.Column="1" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="0,27,5,0" Click="del_Click" Height="20"/>
+            <Button x:Name="addBin" Grid.Row="0" Grid.Column="2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,27,0,0" Click="add_Click" Height="20"/>
+            <Button x:Name="delBin" Grid.Row="0" Grid.Column="2" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="0,27,5,0" Click="del_Click" Height="20"/>
+            <Button x:Name="addPartition" Grid.Row="0" Grid.Column="3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="5,27,0,0" Click="add_Click" Height="20"/>
+            <Button x:Name="delPartition" Grid.Row="0" Grid.Column="3" Content="Del" HorizontalAlignment="right" VerticalAlignment="Top" Width="50" Margin="0,27,5,0" Click="del_Click" Height="20"/>
+            <Label x:Name="BuildingLabel" Content="Building" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Height="26" Width="122" Foreground="White"/>
+            <Label x:Name="ShelfLabel" Content="Shelf"  HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Height="26" Width="122" Foreground="White" Grid.Column="1"/>
+            <Label x:Name="BinLabel" Content="Bin" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="122" Foreground="White" Grid.Column="2" Margin="5,0,0,0"/>
+            <Label x:Name="PartitionLabel" Content="Partition" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="122" Foreground="White" Grid.Column="3" Margin="6,0,0,0"/>
+        </Grid>
+    </Grid>
+</UserControl>

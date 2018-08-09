@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace Inventory.DataTypes
 {
-    public class ProductHasPart
+
+    public class OrderPart
     {
-        public string PartName { get; set; }
+        public string OrderID { get; set; }
         public string PartID { get; set; }
         public int Count { get; set; }
 
-        public ProductHasPart(string PartName, string PartID, int Count)
+        public OrderPart(string orderID, string partID, int count)
         {
-            this.PartName = PartName;
-            this.PartID = PartID;
-            this.Count = Count;
+            this.OrderID = orderID;
+            this.PartID = partID;
+            this.Count = count;
         }
+
     }
 }
