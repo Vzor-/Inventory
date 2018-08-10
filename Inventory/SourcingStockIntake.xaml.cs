@@ -32,16 +32,11 @@ namespace Inventory
             stockGrid.ItemsSource = stock;
         }
 
-        public SourcingStockIntake(List<OrderPart> parts): this(parts ,"N/A")
-        {
-
-        }
-
-        public SourcingStockIntake(List<OrderPart> parts, String orderID) : this()
+        public SourcingStockIntake(List<OrderPart> parts) : this()
         {
             foreach (var item in parts)
             {
-                stock.Add(new DataTypes.Stock(item.PartID, orderID, item.Count, deafultStockLocation));
+                stock.Add(new DataTypes.Stock(item.PartID, item.Count, deafultStockLocation));
             }
             stockGrid.Items.Refresh();
         }

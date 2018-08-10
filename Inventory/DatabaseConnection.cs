@@ -44,7 +44,7 @@ namespace Inventory
         {
             List<DataTypes.Stock> p = new List<DataTypes.Stock>();
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT PartID, OrderID, Count, Location FROM Stock ",
+                "SELECT PartID, Count, Location FROM Stock ",
                 dbConnection);
             //SQLiteCommand command = new SQLiteCommand(
             //    "SELECT Parts.EnglishName, Stock.Count, Parts.InternalID, Parts.IsEOL " +
@@ -55,7 +55,7 @@ namespace Inventory
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new DataTypes.Stock(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
+                p.Add(new DataTypes.Stock(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2)));
             }
             return p;
         }
@@ -115,14 +115,14 @@ namespace Inventory
             List<DataTypes.Stock> s = new List<DataTypes.Stock>();
             String id = item.PartID;
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT PartID, OrderID, Count, Location FROM Stock " +
+                "SELECT PartID, Count, Location FROM Stock " +
                 "WHERE PartID = @id",
                 dbConnection);
             command.Parameters.AddWithValue("@id", id);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                s.Add(new DataTypes.Stock(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
+                s.Add(new DataTypes.Stock(reader.GetString(0),reader.GetInt32(1), reader.GetInt32(2)));
             }
 
             return s;
@@ -135,11 +135,10 @@ namespace Inventory
         internal static void AddStock(DataTypes.Stock item)
         {
             SQLiteCommand command = new SQLiteCommand(
-            "INSERT INTO Stock (PartID, OrderID, Location, Count) " +
-                "VALUES (@partID, @orderID, @location, @count)",
+            "INSERT INTO Stock (PartID, Location, Count) " +
+                "VALUES (@partID, @location, @count)",
                 dbConnection);
             command.Parameters.AddWithValue("@partID", item.PartID);
-            command.Parameters.AddWithValue("@orderID", item.OrderID);
             command.Parameters.AddWithValue("@location", item.Location);
             command.Parameters.AddWithValue("@count", item.Count);
             
@@ -151,11 +150,9 @@ namespace Inventory
             String commandText =
             "UPDATE Stock SET " +
                 "Location = @Location "+
-                "WHERE PartID = @PartID AND " +
-                "OrderID = @OrderID";
+                "WHERE PartID = @PartID";
             SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
             command.Parameters.AddWithValue("PartID", item.PartID);
-            command.Parameters.AddWithValue("OrderID", item.OrderID);
             command.Parameters.AddWithValue("Location", item.Location);
 
             SQLiteDataReader reader = command.ExecuteReader();
@@ -190,7 +187,7 @@ namespace Inventory
                 SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
                 command.Parameters.AddWithValue("@InternalID", item.orderID);
                 command.Parameters.AddWithValue("@state", v);
-
+                //command.
                 SQLiteDataReader reader = command.ExecuteReader();
 
             }

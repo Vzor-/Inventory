@@ -37,7 +37,7 @@ namespace Inventory
                     var count = allStock.FindAll(x => x.PartID == item.InternalID).Sum(y => y.Count);
                     if (count != 0)
                     {
-                        summaryStock.Add(new DataTypes.Stock(item.InternalID, "Total", count, -1));
+                        summaryStock.Add(new DataTypes.Stock(item.InternalID, count, -1));
                     }
                 }
                 stockSummaryGrid.ItemsSource = summaryStock;

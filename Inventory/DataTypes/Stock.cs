@@ -10,14 +10,12 @@ namespace Inventory.DataTypes
     {
 
         public string PartID { get; set; }
-        public string OrderID { get; set; }
         public int Count { get; set; }
         public int Location { get; set; }
 
-        public Stock(string PartID, string OrderID, int Count, int Location)
+        public Stock(string PartID, int Count, int Location)
         {
             this.PartID = PartID;
-            this.OrderID = OrderID;
             this.Count = Count;
             this.Location = Location;
         }
@@ -25,7 +23,6 @@ namespace Inventory.DataTypes
         public Stock(Stock item)
         {
             this.PartID = item.PartID;
-            this.OrderID = item.OrderID;
             this.Count = item.Count;
             this.Location = item.Location;
         }

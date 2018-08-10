@@ -81,7 +81,7 @@ namespace Inventory
                 var amount = item.Count;
 
                 //take some
-                allocatedStock.Add(new DataTypes.Stock(item.PartID, item.OrderID, shells.Count, item.Location));
+                allocatedStock.Add(new DataTypes.Stock(item.PartID, shells.Count, item.Location));
 
                 item.Count -= amount;
 
@@ -135,7 +135,7 @@ namespace Inventory
             var carton = DatabaseConnection.getRecipeHasPart(cake.InternalID);
             allocatedStock.Clear();
             foreach (var egg in carton) {
-                allocatedStock.Add(new DataTypes.Stock(egg.PartID, "Pending Order", -egg.Count * count, -1));
+                allocatedStock.Add(new DataTypes.Stock(egg.PartID, -egg.Count * count, -1));
             }
             stockAllocation.ItemsSource = allocatedStock;
         }
