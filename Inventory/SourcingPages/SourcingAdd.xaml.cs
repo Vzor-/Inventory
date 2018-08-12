@@ -80,11 +80,7 @@ namespace Inventory
                 AddToOrder((Part)item);
             }
         }
-
-        private void pendingParts_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+        
 
         private void clearOrder_Click(object sender, RoutedEventArgs e)
         {

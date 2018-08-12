@@ -26,10 +26,6 @@ namespace Inventory.DataTypes
             this.Count = item.Count;
             this.Location = item.Location;
         }
-
-        internal void Clone()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

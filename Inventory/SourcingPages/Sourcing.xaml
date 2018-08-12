@@ -13,8 +13,8 @@
         <TabItem Header="  Place New  ">
             <local:SourcingAdd/>
         </TabItem>
-        <TabItem Header="  Edit Order  ">
+        <!--<TabItem Header="  Edit Order  ">
             <local:SourcingEdit/>
-        </TabItem>
+        </TabItem>-->
     </TabControl>
 </UserControl>

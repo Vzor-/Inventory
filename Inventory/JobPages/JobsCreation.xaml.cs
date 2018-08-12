@@ -1,14 +1,26 @@
 ﻿using Inventory.DataTypes;
-using Inventory.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace Inventory
+namespace Inventory.JobPages
 {
-    public partial class Jobs : UserControl
+    /// <summary>
+    /// Interaction logic for JobsCreation.xaml
+    /// JobsCreation run the repice and consumes parts from stock to run Job
+    /// </summary>
+    public partial class JobsCreation : UserControl
     {
         List<DataTypes.Stock> allocatedStock = new List<DataTypes.Stock>();
         List<DataTypes.Stock> allStockPristine;
@@ -17,7 +29,8 @@ namespace Inventory
         Recipe currentCake;
         int count = -1;
 
-        public Jobs()
+
+        public JobsCreation()
         {
             InitializeComponent();
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
@@ -27,9 +40,10 @@ namespace Inventory
                 allStockPristine = (List<DataTypes.Stock>)DatabaseConnection.getStock();
                 allStock = allStockPristine.ConvertAll(stock => new DataTypes.Stock(stock));
 
+
             }
         }
-
+            
         private void recipePartsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var sourceGrid = (DataGrid)(e.Source);
@@ -124,7 +138,7 @@ namespace Inventory
                 allocatedStock.Clear();
                 allStock = allStockPristine.ConvertAll(stock => new DataTypes.Stock(stock));
                 count = -1;
-                
+
                 stockLocations.Items.Refresh();
                 stockAllocation.Items.Refresh();
             }
@@ -134,7 +148,8 @@ namespace Inventory
         {
             var carton = DatabaseConnection.getRecipeHasPart(cake.InternalID);
             allocatedStock.Clear();
-            foreach (var egg in carton) {
+            foreach (var egg in carton)
+            {
                 allocatedStock.Add(new DataTypes.Stock(egg.PartID, -egg.Count * count, -1));
             }
             stockAllocation.ItemsSource = allocatedStock;

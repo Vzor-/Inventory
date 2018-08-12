@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Inventory.JobPages.JobAdd"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Inventory.JobPages"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Background="#272727">
+    <Grid>
+
+        <Image Grid.Column="1" Grid.Row="1" Source="SimpleLogoDim.png" Margin="10"/>
+        <DataGrid x:Name="avalibleRecipes" HorizontalAlignment="Left" Height="100" Margin="423,36,0,0" VerticalAlignment="Top" Width="367" MouseDoubleClick="AvalibleRecipes_MouseDoubleClick" IsReadOnly="True" PreviewKeyDown="avalibleRecipes_PreviewKeyDown" SelectionChanged="avalibleRecipes_SelectionChanged"/>
+        <Label Content="Select Recipes" HorizontalAlignment="Left" Margin="423,10,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
+        <Button x:Name="addParts" Content="Add" HorizontalAlignment="Left" Margin="715,141,0,0" VerticalAlignment="Top" Width="75" Click="addRecipe_Click"/>
+
+        <DataGrid x:Name="pendingRecipesDataGrid" HorizontalAlignment="Left" Height="100" Margin="10,216,0,0" VerticalAlignment="Top" Width="780" LostFocus="pendingRecipesDataGrid_LostFocus"/>
+        <Label Content="Recipe list" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
+        <Button x:Name="applyJobButton" IsEnabled="False" Content="Apply" HorizontalAlignment="Left" Margin="715,420,0,0" VerticalAlignment="Top" Width="75" Click="applyJob_Click" />
+        <Button x:Name="clearJobButton" Content="Clear" HorizontalAlignment="Left" Margin="635,420,0,0" VerticalAlignment="Top" Width="75" Click="clearJob_Click" />
+        <TextBox x:Name="jobNameTextBox" HorizontalAlignment="Left" Height="22" Margin="91,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="327" TextChanged="jobNameTextBox_TextChanged"/>
+        <Label Content="Job Name" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
+
+
+    </Grid>
+</UserControl>

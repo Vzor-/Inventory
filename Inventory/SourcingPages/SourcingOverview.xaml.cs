@@ -65,18 +65,27 @@ namespace Inventory
 
         private void setOrderToOrdered(Order item)
         {
-            DatabaseConnection.updateOrder(item, nameof(item.Ordered), true);
+            if (!item.Ordered)
+            {
+                DatabaseConnection.updateOrder(item, nameof(item.Ordered), true);
+            }
         }
 
         private void setOrderToApproved(Order item)
         {
-            DatabaseConnection.updateOrder(item, nameof(item.Approved), true);
+            if (!item.Approved)
+            {
+                DatabaseConnection.updateOrder(item, nameof(item.Approved), true);
+            }
         }
 
         private void setOrderToRecived(Order item)
         {
-            DatabaseConnection.updateOrder(item, nameof(item.Recived), true);
-            intakeOrderStock(item);
+            if (!item.Recived)
+            {
+                DatabaseConnection.updateOrder(item, nameof(item.Recived), true);
+                intakeOrderStock(item);
+            }
         }
 
         private void intakeOrderStock(Order item)

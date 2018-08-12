@@ -77,6 +77,7 @@ namespace Inventory
                     "WHERE InternalID = @InternalID");
         }
 
+
         private static bool doRecipeCommand(Recipe Recipe, string commandText)
         {
             SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
@@ -94,7 +95,6 @@ namespace Inventory
             return false;
         }
 
-
         public static List<Recipe> getRecipes()
         {
             List<Recipe> p = new List<Recipe>();
@@ -110,10 +110,10 @@ namespace Inventory
         }
 
 
-        public static List<DataTypes.Stock> getLocationsOfStock(DataTypes.Stock item)
+        public static List<DataTypes.Stock> getLocationsOfStock(DataTypes.Part item)
         {
             List<DataTypes.Stock> s = new List<DataTypes.Stock>();
-            String id = item.PartID;
+            String id = item.InternalID;
             SQLiteCommand command = new SQLiteCommand(
                 "SELECT PartID, Count, Location FROM Stock " +
                 "WHERE PartID = @id",
@@ -126,6 +126,88 @@ namespace Inventory
             }
 
             return s;
+        }
+
+        #endregion
+
+        #region Jobs
+
+        internal static IEnumerable getJobs()
+        {
+            List<DataTypes.Job> p = new List<DataTypes.Job>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM Jobs ",
+                dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                p.Add(new DataTypes.Job(reader.GetInt32(0), reader.GetString(1), reader.GetBoolean(2), reader.GetBoolean(3)));
+            }
+            return p;
+        }
+
+        internal static void updateJob(Job item, string parameter, bool v)
+        {
+            // check that Order has parameter, protect from SQL injection like parameterization??
+            if (item.GetType().GetProperty(parameter) != null)
+            {
+                String commandText = String.Format("UPDATE Jobs SET {0} = @state WHERE InternalID = @InternalID", parameter);
+                SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+                command.Parameters.AddWithValue("@InternalID", item.InternalId);
+                command.Parameters.AddWithValue("@state", v);
+                //command.
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
+        }
+
+        internal static string addJob(Job newJob)
+        {
+            String returnMsg = "Passed";
+            SQLiteCommand command = new SQLiteCommand(
+            "INSERT INTO Jobs (EnglishName, Approved, Created) " +
+                "VALUES (@EnglishName, @Approved, @Created)",
+                dbConnection);
+            command.Parameters.AddWithValue("@EnglishName", newJob.EnglishName);
+            command.Parameters.AddWithValue("@Approved", newJob.Approved);
+            command.Parameters.AddWithValue("@Created", newJob.Created);
+            try
+            {
+                SQLiteDataReader reader = command.ExecuteReader();
+                newJob.InternalId = (int)dbConnection.LastInsertRowId;
+            }
+            catch (SQLiteException ex)
+            {
+                returnMsg = ex.Message;
+                if (ex.Message.Contains("UniqueConstraint"))
+                {
+                    //returnMsg = "UniqueConstraintError";
+                }
+                //throw new UniqueConstraintException();
+
+            }
+            finally
+            {
+
+            }
+
+            return returnMsg;
+        }
+
+        internal static void addRecipesToJob(Job newJob, List<JobHasRecipe> pendingRecipes)
+        {
+            foreach (var cake in pendingRecipes) 
+            {
+                SQLiteCommand command = new SQLiteCommand(
+                "INSERT INTO JobHasRecipes (JobID, RecipesID, Count) " +
+                    "VALUES (@JobID, @RecipesID, @Count)",
+                    dbConnection);
+                command.Parameters.AddWithValue("@JobID", newJob.InternalId);
+                command.Parameters.AddWithValue("@RecipesID", cake.RecipeID);
+                command.Parameters.AddWithValue("@Count", cake.Count);
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
         }
 
         #endregion
@@ -152,6 +234,36 @@ namespace Inventory
                 "Location = @Location "+
                 "WHERE PartID = @PartID";
             SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+            command.Parameters.AddWithValue("PartID", item.PartID);
+            command.Parameters.AddWithValue("Location", item.Location);
+
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
+
+        internal static void addStockLoss(Loss item)
+        {
+            SQLiteCommand command = new SQLiteCommand(
+            "INSERT INTO Losses (PartID,  Reason, NumberLost, Date) " +
+                "VALUES (@partID, @reason, @numberLost, @date)",
+                dbConnection);
+            command.Parameters.AddWithValue("@partID", item.PartID);
+            command.Parameters.AddWithValue("@reason", item.Reason);
+            command.Parameters.AddWithValue("@numberLost", item.NumberLost);
+            command.Parameters.AddWithValue("@date", item.Date);
+
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
+
+        internal static void updateStockCount(DataTypes.Stock item)
+        {
+            String commandText =
+            "UPDATE Stock SET " +
+                "Count = @Count " +
+                "WHERE PartID = @PartID AND Location = @Location";
+            SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+            command.Parameters.AddWithValue("Count", item.Count);
             command.Parameters.AddWithValue("PartID", item.PartID);
             command.Parameters.AddWithValue("Location", item.Location);
 

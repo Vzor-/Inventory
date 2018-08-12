@@ -17,6 +17,10 @@ namespace Inventory.DataTypes
             LocationPartition = 3
         }
 
+        public override string ToString() {
+            return Name;
+        }
+
         public string Name { get; set; }
         public LocationType Type { get; set; }
         public int ID { get; }

@@ -13,7 +13,7 @@
         <Label Content="Select parts" HorizontalAlignment="Left" Margin="423,10,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
         <Button x:Name="addParts" Content="Add" HorizontalAlignment="Left" Margin="715,141,0,0" VerticalAlignment="Top" Width="75" Click="addParts_Click"/>
 
-        <DataGrid x:Name="pendingParts" HorizontalAlignment="Left" Height="100" Margin="10,216,0,0" VerticalAlignment="Top" Width="780" SelectionChanged="pendingParts_SelectionChanged" />
+        <DataGrid x:Name="pendingParts" HorizontalAlignment="Left" Height="100" Margin="10,216,0,0" VerticalAlignment="Top" Width="780"/>
         <Label Content="Part list" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
         <Button x:Name="applyOrderButton" Content="Apply" HorizontalAlignment="Left" Margin="715,420,0,0" VerticalAlignment="Top" Width="75" Click="applyOrder_Click" />
         <Button x:Name="clearOrderButton" Content="Clear" HorizontalAlignment="Left" Margin="635,420,0,0" VerticalAlignment="Top" Width="75" Click="clearOrder_Click" />

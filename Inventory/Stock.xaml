@@ -16,7 +16,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="0" Grid.ColumnSpan="1">
-            <DataGrid Name="stockSummaryGrid" Margin="10,31,10,10" SelectionChanged="stockSummaryGrid_SelectionChanged" SelectionMode="Single"/>
+            <DataGrid Name="partListGrid" Margin="10,31,10,10" SelectionChanged="partListGrid_SelectionChanged" SelectionMode="Single"/>
             <TextBlock Grid.Row="0" Text="Parts" Margin="10,10,10,300" Foreground="#FF878787" />
         </Grid>
         <Grid Grid.Column="1" Grid.ColumnSpan="1">

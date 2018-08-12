@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Inventory"
+        xmlns:jobpages="clr-namespace:Inventory.JobPages"
         mc:Ignorable="d"
         Title="Inventory System V0.1" Height="720" Width="1080">
     <Grid Background="#272727">
@@ -11,26 +12,26 @@
             <TabItem Header="  Home  ">
                 <local:Home/>
             </TabItem>
-            <TabItem Header="  Recipes  ">
-                <local:Recipes/>
-            </TabItem>
             <TabItem Header="  Stock  ">
                 <local:Stock/>
             </TabItem>
             <TabItem Header="  Jobs  ">
-                <local:Jobs/>
+                <jobpages:JobsMain/>
             </TabItem>
             <TabItem Header="  Sourcing  ">
                 <local:Sourcing/>
             </TabItem>
             <TabItem Header="  Fulfillment  ">
-                <Grid Background="#FFE5E5E5"/>
+                <local:Fulfillment/>
             </TabItem>
             <TabItem Header="  Losses  ">
-                <Grid Background="#FFE5E5E5"/>
+                <local:Losses/>
             </TabItem>
             <TabItem Header="  Reports  ">
                 <local:Reports/>
+            </TabItem>
+            <TabItem Header="  Recipes  ">
+                <local:Recipes/>
             </TabItem>
         </TabControl>
 

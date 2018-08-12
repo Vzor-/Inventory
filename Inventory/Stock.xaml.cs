@@ -31,16 +31,17 @@ namespace Inventory
             {
                 //Code that throws the exception
                 parts = DatabaseConnection.getParts();
+                partListGrid.ItemsSource = parts;
                 allStock = (List<DataTypes.Stock>)DatabaseConnection.getStock();
-                foreach (Part item in parts)
-                {
-                    var count = allStock.FindAll(x => x.PartID == item.InternalID).Sum(y => y.Count);
-                    if (count != 0)
-                    {
-                        summaryStock.Add(new DataTypes.Stock(item.InternalID, count, -1));
-                    }
-                }
-                stockSummaryGrid.ItemsSource = summaryStock;
+                //foreach (Part item in parts)
+                //{
+                //    var count = allStock.FindAll(x => x.PartID == item.InternalID).Sum(y => y.Count);
+                //    if (count != 0)
+                //    {
+                //        summaryStock.Add(new DataTypes.Stock(item.InternalID, count, -1));
+                //    }
+                //}
+                //partListGrid.ItemsSource = summaryStock;
             }
             
 
@@ -56,13 +57,13 @@ namespace Inventory
             stockInLocation.ItemsSource = items;
         }
 
-        private void stockSummaryGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void partListGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var sourceGrid = (DataGrid)(e.Source);
 
             if (sourceGrid != null)
             {
-                stockLocationsUpdateFromSummary((DataTypes.Stock)sourceGrid.CurrentItem);
+                stockLocationsUpdateFromPart((DataTypes.Part)sourceGrid.CurrentItem);
             }
         }
 
@@ -95,9 +96,9 @@ namespace Inventory
         }
 
 
-        private void stockLocationsUpdateFromSummary(DataTypes.Stock stockItem) {
+        private void stockLocationsUpdateFromPart(DataTypes.Part partItem) {
 
-            var loc = DatabaseConnection.getLocationsOfStock(stockItem);
+            var loc = DatabaseConnection.getLocationsOfStock(partItem);
 
             stockLocations.ItemsSource = loc;
         }

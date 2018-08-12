@@ -97,15 +97,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="JobPages\JobAdd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JobPages\JobRecipeStockAllocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JobPages\JobsOverview.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Losses\Fulfillment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JobPages\JobsCreation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LocationsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Losses\Losses.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Losses\PartQtyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Reports.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sourcing.xaml">
+    <Page Include="SourcingPages\Sourcing.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -113,23 +141,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Jobs.xaml">
+    <Page Include="JobPages\JobsMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SourcingAdd.xaml">
+    <Page Include="SourcingPages\SourcingAdd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SourcingEdit.xaml">
+    <Page Include="SourcingPages\SourcingEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SourcingOverview.xaml">
+    <Page Include="SourcingPages\SourcingOverview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SourcingStockIntake.xaml">
+    <Page Include="SourcingPages\SourcingStockIntake.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,38 +207,62 @@
     </Compile>
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="DataTypes\Interface1.cs" />
+    <Compile Include="DataTypes\Jobs.cs" />
     <Compile Include="DataTypes\Location.cs" />
+    <Compile Include="DataTypes\Loss.cs" />
     <Compile Include="DataTypes\Order.cs" />
     <Compile Include="DataTypes\OrderPart.cs" />
     <Compile Include="DataTypes\Part.cs" />
+    <Compile Include="DataTypes\JobHasRecipe.cs" />
     <Compile Include="DataTypes\RecipeHasPart.cs" />
     <Compile Include="DataTypes\Recipe.cs" />
     <Compile Include="DataTypes\Stock.cs" />
+    <Compile Include="JobPages\JobAdd.xaml.cs">
+      <DependentUpon>JobAdd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JobPages\JobRecipeStockAllocation.xaml.cs">
+      <DependentUpon>JobRecipeStockAllocation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JobPages\JobsOverview.xaml.cs">
+      <DependentUpon>JobsOverview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Losses\Fulfillment.xaml.cs">
+      <DependentUpon>Fulfillment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JobPages\JobsCreation.xaml.cs">
+      <DependentUpon>JobsCreation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocationsView.xaml.cs">
       <DependentUpon>LocationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Losses\Losses.xaml.cs">
+      <DependentUpon>Losses.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Losses\PartQtyDialog.xaml.cs">
+      <DependentUpon>PartQtyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports.xaml.cs">
       <DependentUpon>Reports.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sourcing.xaml.cs">
+    <Compile Include="SourcingPages\Sourcing.xaml.cs">
       <DependentUpon>Sourcing.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\GeneralDialog.xaml.cs">
       <DependentUpon>GeneralDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Jobs.xaml.cs">
-      <DependentUpon>Jobs.xaml</DependentUpon>
+    <Compile Include="JobPages\JobsMain.xaml.cs">
+      <DependentUpon>JobsMain.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SourcingAdd.xaml.cs">
+    <Compile Include="SourcingPages\SourcingAdd.xaml.cs">
       <DependentUpon>SourcingAdd.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SourcingEdit.xaml.cs">
+    <Compile Include="SourcingPages\SourcingEdit.xaml.cs">
       <DependentUpon>SourcingEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SourcingOverview.xaml.cs">
+    <Compile Include="SourcingPages\SourcingOverview.xaml.cs">
       <DependentUpon>SourcingOverview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SourcingStockIntake.xaml.cs">
+    <Compile Include="SourcingPages\SourcingStockIntake.xaml.cs">
       <DependentUpon>SourcingStockIntake.xaml</DependentUpon>
     </Compile>
     <Compile Include="Stock.xaml.cs">
