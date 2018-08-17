@@ -1,0 +1,17 @@
+﻿<Window x:Class="Inventory.JobPages.JobConsumptionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Inventory.JobPages"
+        mc:Ignorable="d"
+        Title="JobRecipeStockAllocation" Height="640" Width="1000" Background="#272727">
+    <Grid>
+        <Label Content="Job Consumption" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
+        <DataGrid x:Name="jobsConsumptionDataGrid" IsReadOnly="True" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="972">
+
+        </DataGrid>
+        <!--<DataGrid x:Name="recipePartsGrid" CanUserAddRows="True"  HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="50" SelectionMode="Single" IsReadOnly="True" Margin="510,41,10,0" SelectionChanged="recipePartsGrid_SelectionChanged" Height="100"/>-->
+
+    </Grid>
+</Window>

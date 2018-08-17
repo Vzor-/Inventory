@@ -98,10 +98,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="JobPages\JobAdd.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="JobPages\JobRecipeStockAllocation.xaml">
+    <Page Include="JobPages\JobConsumptionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="JobPages\JobConsumptionAllocation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,6 +130,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Losses\PartQtyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Popups\BuildingLocationDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Popups\CalendarDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -213,16 +225,21 @@
     <Compile Include="DataTypes\Order.cs" />
     <Compile Include="DataTypes\OrderPart.cs" />
     <Compile Include="DataTypes\Part.cs" />
-    <Compile Include="DataTypes\JobHasRecipe.cs" />
+    <Compile Include="DataTypes\JobConsumption.cs" />
     <Compile Include="DataTypes\RecipeHasPart.cs" />
     <Compile Include="DataTypes\Recipe.cs" />
+    <Compile Include="DataTypes\StateLookup.cs" />
     <Compile Include="DataTypes\Stock.cs" />
     <Compile Include="JobPages\JobAdd.xaml.cs">
       <DependentUpon>JobAdd.xaml</DependentUpon>
     </Compile>
-    <Compile Include="JobPages\JobRecipeStockAllocation.xaml.cs">
-      <DependentUpon>JobRecipeStockAllocation.xaml</DependentUpon>
+    <Compile Include="JobPages\JobConsumptionView.xaml.cs">
+      <DependentUpon>JobConsumptionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JobPages\JobConsumptionAllocation.xaml.cs">
+      <DependentUpon>JobConsumptionAllocation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JobPages\JobConsumptionAllocationLogic.cs" />
     <Compile Include="JobPages\JobsOverview.xaml.cs">
       <DependentUpon>JobsOverview.xaml</DependentUpon>
     </Compile>
@@ -240,6 +257,12 @@
     </Compile>
     <Compile Include="Losses\PartQtyDialog.xaml.cs">
       <DependentUpon>PartQtyDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\BuildingLocationDialog.xaml.cs">
+      <DependentUpon>BuildingLocationDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\CalendarDialog.xaml.cs">
+      <DependentUpon>CalendarDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports.xaml.cs">
       <DependentUpon>Reports.xaml</DependentUpon>

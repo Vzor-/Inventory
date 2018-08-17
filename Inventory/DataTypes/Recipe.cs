@@ -18,5 +18,10 @@ namespace Inventory.DataTypes
             this.InternalID = InternalID;
             this.IsActive = IsActive;
         }
+
+        public override string ToString()
+        {
+            return this.EnglishName;
+        }
     }
 }

@@ -9,7 +9,7 @@
     <Grid>
         <Image Grid.Column="1" Grid.Row="1" Source="SimpleLogoDim.png" Margin="10"/>
         <Label Content="Orders" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
-        <DataGrid x:Name="OrderDataGrid" HorizontalAlignment="Left" Height="100" Margin="10,41,0,0" VerticalAlignment="Top" Width="780" SelectionChanged="OrderDataGrid_SelectionChanged">
+        <DataGrid x:Name="OrderDataGrid" HorizontalAlignment="Left" Height="100" Margin="10,41,0,0" VerticalAlignment="Top" Width="780" SelectionChanged="OrderDataGrid_SelectionChanged" MouseRightButtonDown="OrderDataGrid_MouseRightButtonDown" MouseDoubleClick="OrderDataGrid_MouseDoubleClick">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header=" Set Approved " Click="SourcingOverview_Approved_Item_Click"></MenuItem>

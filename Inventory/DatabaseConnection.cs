@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using Inventory.DataTypes;
 using System.Collections;
+using Inventory.JobPages;
+using System.Diagnostics;
 
 namespace Inventory
 {
@@ -132,6 +134,22 @@ namespace Inventory
 
         #region Jobs
 
+        internal static List<JobConsumption> findJobConsumption(Job item)
+        {
+            List<DataTypes.JobConsumption> p = new List<DataTypes.JobConsumption>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM JobConsumption " +
+                "WHERE JobID = @JobID",
+            dbConnection);
+            command.Parameters.AddWithValue("@JobID", item.InternalId);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                p.Add(new DataTypes.JobConsumption(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetString(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7)));
+            }
+            return p;
+        }
+
         internal static IEnumerable getJobs()
         {
             List<DataTypes.Job> p = new List<DataTypes.Job>();
@@ -141,36 +159,30 @@ namespace Inventory
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new DataTypes.Job(reader.GetInt32(0), reader.GetString(1), reader.GetBoolean(2), reader.GetBoolean(3)));
+                p.Add(new DataTypes.Job(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2)));
             }
             return p;
         }
-
-        internal static void updateJob(Job item, string parameter, bool v)
-        {
-            // check that Order has parameter, protect from SQL injection like parameterization??
-            if (item.GetType().GetProperty(parameter) != null)
-            {
-                String commandText = String.Format("UPDATE Jobs SET {0} = @state WHERE InternalID = @InternalID", parameter);
-                SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
-                command.Parameters.AddWithValue("@InternalID", item.InternalId);
-                command.Parameters.AddWithValue("@state", v);
-                //command.
-                SQLiteDataReader reader = command.ExecuteReader();
-
-            }
-        }
+        
+        internal static void updateJob(Job item, StateLookup parameter)
+		{
+		    String commandText = String.Format("UPDATE Jobs SET State = @state WHERE InternalID = @InternalID");
+			SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+			command.Parameters.AddWithValue("@InternalID", item.InternalId);
+			command.Parameters.AddWithValue("@state", (int)parameter.stateValue);
+			SQLiteDataReader reader = command.ExecuteReader();
+		   
+		}
 
         internal static string addJob(Job newJob)
         {
             String returnMsg = "Passed";
             SQLiteCommand command = new SQLiteCommand(
-            "INSERT INTO Jobs (EnglishName, Approved, Created) " +
-                "VALUES (@EnglishName, @Approved, @Created)",
+            "INSERT INTO Jobs (EnglishName, State) " +
+                "VALUES (@EnglishName, @State)",
                 dbConnection);
             command.Parameters.AddWithValue("@EnglishName", newJob.EnglishName);
-            command.Parameters.AddWithValue("@Approved", newJob.Approved);
-            command.Parameters.AddWithValue("@Created", newJob.Created);
+            command.Parameters.AddWithValue("@State", 0);
             try
             {
                 SQLiteDataReader reader = command.ExecuteReader();
@@ -194,25 +206,93 @@ namespace Inventory
             return returnMsg;
         }
 
-        internal static void addRecipesToJob(Job newJob, List<JobHasRecipe> pendingRecipes)
+        /// <summary>
+        /// Add new Job based JobConsumption to table with 
+        /// </summary>
+        /// <param name="pendingConsumptions"></param>
+        internal static void addJobConsumptionToJob(List<JobConsumption> pendingConsumptions)
         {
-            foreach (var cake in pendingRecipes) 
+            foreach (var cake in pendingConsumptions)
             {
                 SQLiteCommand command = new SQLiteCommand(
-                "INSERT INTO JobHasRecipes (JobID, RecipesID, Count) " +
-                    "VALUES (@JobID, @RecipesID, @Count)",
+                "INSERT INTO JobConsumption (JobID, RecipesID, LocationID, PartsID, PartsCount, RecipesCount, State) " +
+                    "VALUES (@JobID, @RecipesID, @LocationID, @PartsID, @PartsCount, @RecipesCount, @State)",
                     dbConnection);
-                command.Parameters.AddWithValue("@JobID", newJob.InternalId);
-                command.Parameters.AddWithValue("@RecipesID", cake.RecipeID);
-                command.Parameters.AddWithValue("@Count", cake.Count);
+                command.Parameters.AddWithValue("@JobID", cake.JobID);
+                command.Parameters.AddWithValue("@RecipesID", cake.RecipesID);
+                command.Parameters.AddWithValue("@LocationID", cake.LocationID);
+                command.Parameters.AddWithValue("@PartsID", cake.PartsID);
+                command.Parameters.AddWithValue("@PartsCount", cake.PartsCount);
+                command.Parameters.AddWithValue("@RecipesCount", cake.RecipesCount);
+                command.Parameters.AddWithValue("@State", cake.State);
+                SQLiteDataReader reader = command.ExecuteReader();
+                Debug.WriteLine("addRecipesToJob pendingConsumptions row created with id: " + (int)dbConnection.LastInsertRowId);
+            }
+        }
+
+        /// <summary>
+        /// Remove JobAllocations from table
+        /// </summary>
+        /// <param name="jobConsumption"></param>
+        internal static void delJobAllocation(List<JobConsumption> jobConsumption)
+        {
+            foreach (var item in jobConsumption) 
+            {
+                SQLiteCommand command = new SQLiteCommand(
+                "DELETE FROM JobConsumption " +
+                "WHERE InternalID = @InternalID",
+                dbConnection);
+                command.Parameters.AddWithValue("@InternalID", item.InternalID);
                 SQLiteDataReader reader = command.ExecuteReader();
 
             }
         }
 
+
+
+        //internal static void addRecipesToJob(Job newJob, List<JobConsumption> pendingRecipes)
+        //{
+        //    foreach (var cake in pendingRecipes) 
+        //    {
+        //        SQLiteCommand command = new SQLiteCommand(
+        //        "INSERT INTO JobHasRecipes (JobID, RecipesID, Count) " +
+        //            "VALUES (@JobID, @RecipesID, @Count)",
+        //            dbConnection);
+        //        command.Parameters.AddWithValue("@JobID", newJob.InternalId);
+        //        command.Parameters.AddWithValue("@RecipesID", cake.RecipeID);
+        //        command.Parameters.AddWithValue("@Count", cake.Count);
+        //        SQLiteDataReader reader = command.ExecuteReader();
+
+        //    }
+        //}
+
         #endregion
 
         #region Stock
+
+        /// <summary>
+        /// Find All stock from stated LocationBuilding down to partition.
+        /// </summary>
+        /// <param name="baseLoc"></param>
+        /// <returns></returns>
+        internal static List<DataTypes.Stock> getStockInLocationRecursive(Location baseLocationBuilding) {
+            List<DataTypes.Stock> p = new List<DataTypes.Stock>();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT PartID, Count, Location FROM Stock " +
+                "INNER JOIN LocationPartition ON LocationPartition.ID = Stock.Location " +
+                "INNER JOIN LocationBin ON LocationPartition.ParentID = LocationBin.ID " +
+                "INNER JOIN LocationShelf ON LocationBin.ParentID = LocationShelf.ID " +
+                "INNER JOIN LocationBuilding ON LocationShelf.ParentID = LocationBuilding.ID " +
+                "WHERE LocationBuilding.ID = @ID;",
+                dbConnection);
+                command.Parameters.AddWithValue("@ID", baseLocationBuilding.ID);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                p.Add(new DataTypes.Stock(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2)));
+            }
+            return p;
+        }
 
         internal static void AddStock(DataTypes.Stock item)
         {
@@ -303,6 +383,43 @@ namespace Inventory
                 SQLiteDataReader reader = command.ExecuteReader();
 
             }
+        }
+
+
+        internal static string updateOrder(Order item)
+        {
+            String returnMsg = "Passed";
+            SQLiteCommand command = new SQLiteCommand(
+            "UPDATE Orders SET InternalID = @InternalID, approved = @approved, ordered = @ordered, recived = @recived, orderedDate = @orderedDate, expectedDate = @expectedDate " +
+                "WHERE InternalID = @InternalID",
+                dbConnection);
+            command.Parameters.AddWithValue("@InternalID", item.orderID);
+            command.Parameters.AddWithValue("@approved", item.Approved);
+            command.Parameters.AddWithValue("@ordered", item.Ordered);
+            command.Parameters.AddWithValue("@recived", item.Recived);
+            command.Parameters.AddWithValue("@orderedDate", item.orderedDate);
+            command.Parameters.AddWithValue("@expectedDate", item.expectedDate);
+            try
+            {
+                SQLiteDataReader reader = command.ExecuteReader();
+
+            }
+            catch (SQLiteException ex)
+            {
+                returnMsg = ex.Message;
+                if (ex.Message.Contains("UniqueConstraint"))
+                {
+                    //returnMsg = "UniqueConstraintError";
+                }
+                //throw new UniqueConstraintException();
+
+            }
+            finally
+            {
+
+            }
+
+            return returnMsg;
         }
 
         public static List<Order> getOrders()

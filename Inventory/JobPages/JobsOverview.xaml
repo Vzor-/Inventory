@@ -4,15 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="#272727">
+             d:DesignHeight="450" d:DesignWidth="800" Background="#272727" >
     <Grid>
         <Image Grid.Column="1" Grid.Row="1" Source="SimpleLogoDim.png" Margin="10"/>
         <Label Content="Jobs" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FF878787" />
-        <DataGrid x:Name="JobsDataGrid" HorizontalAlignment="Left" Height="100" Margin="10,41,0,0" VerticalAlignment="Top" Width="780" SelectionChanged="OrderDataGrid_SelectionChanged" MouseDoubleClick="JobsDataGrid_MouseDoubleClick">
+        <DataGrid x:Name="jobsDataGrid" IsReadOnly="True" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" SelectionChanged="OrderDataGrid_SelectionChanged" ContextMenuOpening="jobsDataGrid_ContextMenuOpening">
             <DataGrid.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="jobsDataGrid_ContextMenu">
                     <MenuItem Header=" Set Approved " Click="JobsOverview_Approved_Item_Click"></MenuItem>
                     <MenuItem Header=" Set Created " Click="JobsOverview_Created_Item_Click"></MenuItem>
+                    <MenuItem Header=" Auto Allocate " Click="jobsDatagrid_ContextMenu_Click_AutoAllocate"></MenuItem>
+                    <MenuItem Header=" View Allocation " Click="JobsOverview_ViewAllocation_Item_Click"></MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>          
         </DataGrid>

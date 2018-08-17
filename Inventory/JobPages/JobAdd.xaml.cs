@@ -22,7 +22,7 @@ namespace Inventory.JobPages
     /// </summary>
     public partial class JobAdd : UserControl
     {
-        List<JobHasRecipe> pendingRecipes;
+        List<JobRecipeCount> pendingRecipes;
         string jobName;
         public JobAdd()
         {
@@ -33,23 +33,24 @@ namespace Inventory.JobPages
                 //Code that throws the exception
 
                 avalibleRecipes.ItemsSource = DatabaseConnection.getRecipes();
-                pendingRecipes = new List<JobHasRecipe>();
+                pendingRecipes = new List<JobRecipeCount>();
                 pendingRecipesDataGrid.ItemsSource = pendingRecipes;
             }
         }
 
 
-        private void AvalibleParts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            DataGrid q = (DataGrid)sender;
-            AddToJob((Recipe)q.CurrentItem);
-        }
+        //private void AvalibleParts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    DataGrid q = (DataGrid)sender;
+        //    AddToJob((Recipe)q.CurrentItem);
+        //}
 
 
         private void AddToJob(Recipe sender)
         {
-            DataTypes.JobHasRecipe item = new DataTypes.JobHasRecipe(jobName, sender.InternalID, 0);
-            if (pendingRecipes.Find(x => x.RecipeID == item.RecipeID) == null)
+
+            JobRecipeCount item = new JobRecipeCount(sender, 0);
+            if (pendingRecipes.Find(x => x.recipe.InternalID == item.recipe.InternalID) == null)
             {
                 Debug.WriteLine("New Item added to sourcing List:" + sender.EnglishName);
                 pendingRecipes.Add(item);
@@ -63,7 +64,7 @@ namespace Inventory.JobPages
             checkCanCreateJob();
 
         }
-             
+
         private void pendingParts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -88,7 +89,7 @@ namespace Inventory.JobPages
         private void checkCanCreateJob()
         {
             Boolean ready = true;
-            if (pendingRecipes.Find(x=> x.Count <= 0) != null) ready = false;
+            if (pendingRecipes.Find(x=> x.count <= 0) != null) ready = false;
             if (jobName == "") ready = false;
 
             applyJobButton.IsEnabled = ready;
@@ -110,9 +111,9 @@ namespace Inventory.JobPages
         }
         private void applyJob_Click(object sender, RoutedEventArgs e)
         {
+            Job newJob = new Job(jobName, 0);
             checkCanCreateJob();
             if (applyJobButton.IsEnabled == false) return;
-            Job newJob = new Job(jobName, false, false);
             string entryInfo = DatabaseConnection.addJob(newJob);
             if (entryInfo != "Passed")
             { // there was an error in the SQL statement!!!
@@ -123,9 +124,20 @@ namespace Inventory.JobPages
                 MessageBox.Show(messageBoxText, caption, button, icon);
                 return; // do not continue to change tables!
             }
-            
-            // add Recipes to JobHasRecipes tables for the Job
-            DatabaseConnection.addRecipesToJob(newJob, pendingRecipes);
+
+
+            // create JobConsumption instances
+            List<JobConsumption> jobConsumptions = new List<JobConsumption>();
+
+            foreach (var consumer in pendingRecipes) {
+                List<RecipeHasPart> recipeHasPart = DatabaseConnection.getRecipeHasPart(consumer.recipe.InternalID);
+                foreach (var part in recipeHasPart) {
+                    jobConsumptions.Add(new JobConsumption(newJob.InternalId, consumer.recipe.InternalID, -1, part.PartID, (part.Count * consumer.count), consumer.count, 7));
+                }
+            }
+
+            // add Recipes to JobConsumption tables for the Job
+            DatabaseConnection.addJobConsumptionToJob(jobConsumptions);
 
             clearJob();
 
@@ -145,12 +157,6 @@ namespace Inventory.JobPages
             if (jobNameTextBox.Text != jobName)
             {
                 jobName = jobNameTextBox.Text;
-
-                foreach (var item in pendingRecipes)
-                {
-                    item.JobID = jobName;
-                }
-                pendingRecipesDataGrid.Items.Refresh();
             }
             checkCanCreateJob();
         }
@@ -165,6 +171,20 @@ namespace Inventory.JobPages
         {
             checkCanCreateJob();
         }
+    }
+
+    public class JobRecipeCount
+    {
+
+        public JobRecipeCount(Recipe sender, int v)
+        {
+            this.recipe = sender;
+            this.count = v;
+        }
+        
+
+        public Recipe recipe { get; set; }
+        public int count { get; set; }
     }
 }
 

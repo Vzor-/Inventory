@@ -6,21 +6,19 @@ using System.Threading.Tasks;
 
 namespace Inventory.DataTypes
 {
-    class Job
+    public class Job
     {
         public int InternalId { get; set; }
         public string EnglishName { get; }
-        public bool Approved { get; }
-        public bool Created { get; }
+        public StateLookup State { get; }
 
-        public Job(int InternalId, string EnglishName, bool Approved, bool Created)
+        public Job(int InternalId, string EnglishName, int State)
         {
             this.InternalId = InternalId;
             this.EnglishName = EnglishName;
-            this.Approved = Approved;
-            this.Created = Created;
+            this.State = new StateLookup(State);
         }
 
-        public Job(string EnglishName, bool Approved, bool Created): this( -1,  EnglishName,  Approved, Created) { }
+        public Job(string EnglishName, int State) : this( -1,  EnglishName,  State) { }
     }
 }

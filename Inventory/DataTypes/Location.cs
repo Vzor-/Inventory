@@ -55,7 +55,6 @@ namespace Inventory.DataTypes
                 if (e.Key == System.Windows.Input.Key.Return)
                 {
                     button.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Button.ClickEvent));
-
                 }
             };
             gd.ShowDialog();
