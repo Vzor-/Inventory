@@ -35,6 +35,11 @@ namespace Inventory
             
         }
 
+        internal void updateSourcing()
+        {
+            updatePage();
+        }
+
         private void OrderDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

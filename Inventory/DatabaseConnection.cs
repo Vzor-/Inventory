@@ -299,14 +299,21 @@ namespace Inventory
         internal static void AddStock(DataTypes.Stock item)
         {
             SQLiteCommand command = new SQLiteCommand(
-            "INSERT INTO Stock (PartID, Location, Count) " +
-                "VALUES (@partID, @location, @count)",
+            " INSERT OR IGNORE INTO Stock(PartID, Location, Count) VALUES( @partID, @location, 0); ",
+                dbConnection);
+            command.Parameters.AddWithValue("@partID", item.PartID);
+            command.Parameters.AddWithValue("@location", item.Location);
+            
+            SQLiteDataReader reader = command.ExecuteReader();
+
+             command = new SQLiteCommand(
+            " UPDATE Stock SET Count = Count + @count WHERE PARTID = @partID AND LOCATION = @location; ",
                 dbConnection);
             command.Parameters.AddWithValue("@partID", item.PartID);
             command.Parameters.AddWithValue("@location", item.Location);
             command.Parameters.AddWithValue("@count", item.Count);
-            
-            SQLiteDataReader reader = command.ExecuteReader();
+
+            reader = command.ExecuteReader();
         }
 
         internal static void updateStockLocation(DataTypes.Stock item)

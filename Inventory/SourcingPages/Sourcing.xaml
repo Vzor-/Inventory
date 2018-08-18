@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Inventory"
              mc:Ignorable="d" 
              d:DesignHeight="653" d:DesignWidth="1058" Background="#272727">
-    <TabControl>
+    <TabControl x:Name="sourcingTabControl" SelectionChanged="sourcingTabControl_SelectionChanged" >
         <TabItem Header="  Overview  ">
             <local:SourcingOverview/>
         </TabItem>
