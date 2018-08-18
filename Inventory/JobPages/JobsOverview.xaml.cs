@@ -45,10 +45,28 @@ namespace Inventory.JobPages
                 updatePage();
             //}
         }
+
+        public void updateJobs()
+        {
+            updatePage();
+        }
         private void JobsOverview_Created_Item_Click(object sender, RoutedEventArgs e)
         {
             DataTypes.Job item = (DataTypes.Job)jobsDataGrid.CurrentItem;
 
+            var items = DatabaseConnection.findJobConsumption(item).FindAll(x => x.isOutput == 1);
+            
+            if (items.Count > 0)
+            {
+                List<DataTypes.Stock> tempStock = new List<DataTypes.Stock>();
+                foreach (var egg in items)
+                {
+                    tempStock.Add(new DataTypes.Stock(egg.PartsID, egg.PartsCount, -1));
+                }
+                Window win = new SourcingStockIntake(tempStock);
+                win.Show();
+
+            }
             setJobToCreated(item);
             updatePage();
         }

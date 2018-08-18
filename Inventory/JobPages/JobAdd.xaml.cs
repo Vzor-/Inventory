@@ -109,6 +109,7 @@ namespace Inventory.JobPages
             DataGrid q = (DataGrid)sender;
             AddToJob((Recipe)q.CurrentItem);
         }
+
         private void applyJob_Click(object sender, RoutedEventArgs e)
         {
             Job newJob = new Job(jobName, 0);
@@ -132,7 +133,7 @@ namespace Inventory.JobPages
             foreach (var consumer in pendingRecipes) {
                 List<RecipeHasPart> recipeHasPart = DatabaseConnection.getRecipeHasPart(consumer.recipe.InternalID);
                 foreach (var part in recipeHasPart) {
-                    jobConsumptions.Add(new JobConsumption(newJob.InternalId, consumer.recipe.InternalID, -1, part.PartID, (part.Count * consumer.count), consumer.count, 7));
+                    jobConsumptions.Add(new JobConsumption(newJob.InternalId, consumer.recipe.InternalID, -1, part.PartID, (part.Count * consumer.count), consumer.count, 7, part.isOutput));
                 }
             }
 

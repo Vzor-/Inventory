@@ -32,6 +32,15 @@ namespace Inventory
             stockGrid.ItemsSource = stock;
         }
 
+        public SourcingStockIntake(List<DataTypes.Stock> parts) : this()
+        {
+            foreach (var item in parts)
+            {
+                stock.Add(new DataTypes.Stock(item.PartID, item.Count, deafultStockLocation));
+            }
+            stockGrid.Items.Refresh();
+        }
+
         public SourcingStockIntake(List<OrderPart> parts) : this()
         {
             foreach (var item in parts)

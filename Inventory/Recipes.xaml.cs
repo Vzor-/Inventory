@@ -136,7 +136,7 @@ namespace Inventory
         {
             DatabaseConnection.addRecipeHasPart(
                 (DataTypes.Recipe)recipeGrid.SelectedItem, 
-                (DataTypes.Part)partsGrid.SelectedItem);
+                (DataTypes.Part)partsGrid.SelectedItem, 0);
             HasPartsGrid.ItemsSource = DatabaseConnection.getRecipeHasPart(getRecipeID());
         }
 
@@ -165,16 +165,23 @@ namespace Inventory
         {
             if (e.EditAction == DataGridEditAction.Commit)
             {
-                var s = (DataTypes.RecipeHasPart)HasPartsGrid.Items.GetItemAt(e.Row.GetIndex());
+                var s = (DataTypes.RecipeHasPart)((DataGrid)sender).CurrentItem;
                 try
                 {
-                    int count = Int32.Parse(((TextBox)e.EditingElement).Text);
-                    DatabaseConnection.editRecipeHasPart(getRecipeID(), s.PartID, count);
-                } catch (Exception)
+                    int editValue = Int32.Parse(((TextBox)e.EditingElement).Text);
+                    String editVariable = (String)e.Column.Header;
+                    DatabaseConnection.editRecipeHasPart(getRecipeID(), s.PartID, editVariable, editValue);
+                }
+                catch (Exception)
                 {
                     e.Cancel = true;
                 }
             }
+        }
+
+        private void HasPartsGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+
         }
     }
 }

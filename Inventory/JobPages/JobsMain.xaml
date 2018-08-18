@@ -10,9 +10,9 @@
 
     <DockPanel Margin="5" >
 
-        <TabControl x:Name="jobsTabControl">
-            <TabItem Header="  Overview  ">
-                <jobpages:JobsOverview/>
+        <TabControl x:Name="jobsTabControl" SelectionChanged="jobsTabControl_SelectionChanged" >
+            <TabItem Header="  Overview  " >
+                <jobpages:JobsOverview x:Name="jobsOverviewTab"/>
             </TabItem>
             <TabItem Header="  Place New  " >
                 <jobpages:JobAdd/>

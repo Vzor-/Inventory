@@ -39,7 +39,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Name="HasPartText" FontSize="16" Text="Has Parts" Margin="5" Foreground="#FF878787" />
-            <DataGrid x:Name="HasPartsGrid" Grid.Column="0" Grid.Row="1" CanUserAddRows="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="50" SelectionMode="Single" SelectionChanged="HasPartsGrid_SelectionChanged" CellEditEnding="HasPartsGrid_CellEditEnding"/>
+            <DataGrid x:Name="HasPartsGrid" Grid.Column="0" Grid.Row="1" CanUserAddRows="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="50" SelectionMode="Single" RowEditEnding="HasPartsGrid_RowEditEnding" SelectionChanged="HasPartsGrid_SelectionChanged" CellEditEnding="HasPartsGrid_CellEditEnding"/>
         </Grid>
         <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2"/>
         <GridSplitter Grid.ColumnSpan="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="2"/>

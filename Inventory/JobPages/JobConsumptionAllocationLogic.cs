@@ -27,7 +27,7 @@ namespace Inventory.JobPages
         {
             localJob = job;
             jobConsumption = new List<JobConsumption>();
-            jobConsumption = DatabaseConnection.findJobConsumption(localJob);
+            jobConsumption = DatabaseConnection.findJobConsumption(localJob).FindAll(x=>x.isOutput==0);
             allStockPristine = (List<DataTypes.Stock>)DatabaseConnection.getStock();
 
             IsAllocated = checkIfAllocated(jobConsumption);
@@ -81,7 +81,7 @@ namespace Inventory.JobPages
                 if (item.State == (int)StateLookup.StateEnum.Allocated)
                 {
                     
-                    finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, item.LocationID, item.PartsID, item.PartsCount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated));
+                    finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, item.LocationID, item.PartsID, item.PartsCount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated, 0));
                     continue;
                 }
                 var carton = allStock.FindAll(eggs => eggs.PartID == item.PartsID); // filter this part
@@ -93,7 +93,7 @@ namespace Inventory.JobPages
                     {
                         var amount = item.PartsCount;
                         //take all
-                        finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, egg.Location, item.PartsID, amount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated));
+                        finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, egg.Location, item.PartsID, amount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated, 0));
                         
                         egg.Count -= amount;
                         item.PartsCount -= amount;
@@ -104,7 +104,7 @@ namespace Inventory.JobPages
                         var amount = egg.Count;
 
                         //take some
-                        finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, egg.Location, item.PartsID, amount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated));
+                        finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, egg.Location, item.PartsID, amount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated, 0));
                         
                         egg.Count -= amount;
                         item.PartsCount -= amount;

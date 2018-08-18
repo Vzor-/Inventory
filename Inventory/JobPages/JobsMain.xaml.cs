@@ -17,6 +17,19 @@ namespace Inventory.JobPages
             {
             }
         }
-        
+
+        private void jobsTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                String i = e.AddedItems[0].ToString();
+                if (i.Contains("Overview"))
+                {
+                    ((JobsOverview)((TabItem)jobsTabControl.Items[0]).Content).updateJobs();
+                }
+            }
+
+            //}
+        }
     }
 }

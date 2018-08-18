@@ -11,13 +11,15 @@ namespace Inventory.DataTypes
         public string PartName { get; set; }
         public string PartID { get; set; }
         public int Count { get; set; }
+        public int isOutput { get; set; }
 
         // TODO: fix this as the recipe has part is different then table?
-        public RecipeHasPart(string PartName, string PartID, int Count)
+        public RecipeHasPart(string PartName, string PartID, int Count, int isOutput)
         {
             this.PartName = PartName;
             this.PartID = PartID;
             this.Count = Count;
+            this.isOutput = isOutput;
         }
     }
 }

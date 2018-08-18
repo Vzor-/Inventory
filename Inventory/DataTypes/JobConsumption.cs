@@ -9,17 +9,18 @@ namespace Inventory.DataTypes
     public class JobConsumption
     {
         public int JobID { get; set; }
-        public string RecipesID { get; set; }
+        public string RecipesID { get;}
         public int LocationID { get; set; }
-        public int? InternalID { get; set; }
+        public int? InternalID { get;}
         public string PartsID { get; set; }
         public int PartsCount { get; set; }
         public int RecipesCount { get; set; }
         public int State { get; set; }
+        public int isOutput { get; }
 
         public readonly static int[] validStates = { -2, 7, 4 }; 
 
-        public JobConsumption(int JobID, string RecipesID, int LocationID, int? InternalID, string PartsID, int PartsCount, int RecipesCount, int State)
+        public JobConsumption(int JobID, string RecipesID, int LocationID, int? InternalID, string PartsID, int PartsCount, int RecipesCount, int State, int isOutput)
         {
             this.JobID = JobID;
             this.RecipesID = RecipesID;
@@ -33,9 +34,10 @@ namespace Inventory.DataTypes
                 throw new ArgumentException("State not of valid value");
             }
             this.State = State;
+            this.isOutput = isOutput;
         }
 
-        public JobConsumption(int JobID, string RecipesID, int LocationID, string PartsID, int PartsCount, int RecipesCount, int State) : this(JobID, RecipesID, LocationID, null, PartsID, PartsCount, RecipesCount, State)
+        public JobConsumption(int JobID, string RecipesID, int LocationID, string PartsID, int PartsCount, int RecipesCount, int State, int isOutput) : this(JobID, RecipesID, LocationID, null, PartsID, PartsCount, RecipesCount, State, isOutput)
         {
 
         }

@@ -145,7 +145,7 @@ namespace Inventory
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new DataTypes.JobConsumption(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetString(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7)));
+                p.Add(new DataTypes.JobConsumption(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetString(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8)));
             }
             return p;
         }
@@ -206,6 +206,7 @@ namespace Inventory
             return returnMsg;
         }
 
+
         /// <summary>
         /// Add new Job based JobConsumption to table with 
         /// </summary>
@@ -215,8 +216,8 @@ namespace Inventory
             foreach (var cake in pendingConsumptions)
             {
                 SQLiteCommand command = new SQLiteCommand(
-                "INSERT INTO JobConsumption (JobID, RecipesID, LocationID, PartsID, PartsCount, RecipesCount, State) " +
-                    "VALUES (@JobID, @RecipesID, @LocationID, @PartsID, @PartsCount, @RecipesCount, @State)",
+                "INSERT INTO JobConsumption (JobID, RecipesID, LocationID, PartsID, PartsCount, RecipesCount, State, isOutput) " +
+                    "VALUES (@JobID, @RecipesID, @LocationID, @PartsID, @PartsCount, @RecipesCount, @State, @isOutput)",
                     dbConnection);
                 command.Parameters.AddWithValue("@JobID", cake.JobID);
                 command.Parameters.AddWithValue("@RecipesID", cake.RecipesID);
@@ -225,6 +226,7 @@ namespace Inventory
                 command.Parameters.AddWithValue("@PartsCount", cake.PartsCount);
                 command.Parameters.AddWithValue("@RecipesCount", cake.RecipesCount);
                 command.Parameters.AddWithValue("@State", cake.State);
+                command.Parameters.AddWithValue("@isOutput", cake.isOutput);
                 SQLiteDataReader reader = command.ExecuteReader();
                 Debug.WriteLine("addRecipesToJob pendingConsumptions row created with id: " + (int)dbConnection.LastInsertRowId);
             }
@@ -550,16 +552,17 @@ namespace Inventory
         #endregion
 
         #region Recipe has part
-        public static bool addRecipeHasPart(Recipe Recipe, Part part)
+        public static bool addRecipeHasPart(Recipe Recipe, Part part, int isOutput)
         {
             SQLiteCommand command = new SQLiteCommand(
                 "INSERT INTO RecipeHasPart " +
-                "(PartID, RecipeID, Count) " +
-                "VALUES (@PartID, @RecipeID, @Count)",
+                "(PartID, RecipeID, Count, isOutput) " +
+                "VALUES (@PartID, @RecipeID, @Count, @isOutput)",
                 dbConnection);
             command.Parameters.AddWithValue("PartID", part.InternalID);
             command.Parameters.AddWithValue("RecipeID", Recipe.InternalID);
             command.Parameters.AddWithValue("Count", 1);
+            command.Parameters.AddWithValue("isOutput", isOutput);
             try
             {
                 return (command.ExecuteNonQuery() > 0);
@@ -591,41 +594,67 @@ namespace Inventory
             return false;
         }
 
-        public static bool editRecipeHasPart(string RecipeID, string partID, int Count)
+        //public static bool editRecipeHasPart(string RecipeID, string partID, int Count, int isOutput)
+        //{
+        //    SQLiteCommand command = new SQLiteCommand(
+        //        "UPDATE RecipeHasPart SET " +
+        //        "Count = @Count, " +
+        //        "isOutput = @isOutput " +
+        //        "WHERE PartID = @PartID AND " +
+        //        "RecipeID = @RecipeID",
+        //        dbConnection);
+        //    command.Parameters.AddWithValue("@PartID", partID);
+        //    command.Parameters.AddWithValue("@RecipeID", RecipeID);
+        //    command.Parameters.AddWithValue("@Count", Count);
+        //    command.Parameters.AddWithValue("@isOutput", isOutput);
+        //    try
+        //    {
+        //        return (command.ExecuteNonQuery() > 0);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Out.Write(ex.Message);
+        //    }
+        //    return false;
+        //}
+
+
+        internal static Boolean editRecipeHasPart(string RecipeID, string partID, string editVariable, int editValue)
         {
-            SQLiteCommand command = new SQLiteCommand(
-                "UPDATE RecipeHasPart SET " +
-                "Count = @Count " +
-                "WHERE PartID = @PartID AND " +
-                "RecipeID = @RecipeID",
-                dbConnection);
-            command.Parameters.AddWithValue("PartID", partID);
-            command.Parameters.AddWithValue("RecipeID", RecipeID);
-            command.Parameters.AddWithValue("Count", Count);
-            try
+            if (typeof(RecipeHasPart).GetProperty(editVariable) != null)
             {
-                return (command.ExecuteNonQuery() > 0);
-            }
-            catch (Exception ex)
-            {
-                Console.Out.Write(ex.Message);
+
+                String commandText = String.Format("UPDATE RecipeHasPart SET {0} = @state WHERE PartID = @PartID AND RecipeID = @RecipeID", editVariable);
+                SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+                command.Parameters.AddWithValue("@PartID", partID);
+                command.Parameters.AddWithValue("@RecipeID", RecipeID);
+                command.Parameters.AddWithValue("@state", editValue);
+                //command.
+                try
+                {
+                    return (command.ExecuteNonQuery() > 0);
+                }
+                catch (Exception ex)
+                {
+                    Console.Out.Write(ex.Message);
+                }
             }
             return false;
         }
 
-        public static List<RecipeHasPart> getRecipeHasPart(string RecipeID)
+            public static List<RecipeHasPart> getRecipeHasPart(string RecipeID)
         {
             List<RecipeHasPart> p = new List<RecipeHasPart>();
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT Parts.EnglishName, Parts.InternalID, RecipeHasPart.Count FROM RecipeHasPart " +
+                "SELECT Parts.EnglishName, Parts.InternalID, RecipeHasPart.Count, RecipeHasPart.isOutput FROM RecipeHasPart " +
                 "INNER JOIN Parts ON Parts.InternalID = PartID " +
                 "WHERE RecipeID = @RecipeID",
                 dbConnection);
-            command.Parameters.AddWithValue("RecipeID", RecipeID);
+            command.Parameters.AddWithValue("@RecipeID", RecipeID);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new RecipeHasPart(reader.GetString(0), reader.GetString(1), reader.GetInt32(2)));
+                p.Add(new RecipeHasPart(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
             }
             return p;
         }
