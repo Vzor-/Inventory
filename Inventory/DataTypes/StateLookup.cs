@@ -23,7 +23,7 @@ namespace Inventory.DataTypes
         }
 
         public StateEnum stateValue;
-        String stateName;
+
 
         public StateLookup(int value)
         {

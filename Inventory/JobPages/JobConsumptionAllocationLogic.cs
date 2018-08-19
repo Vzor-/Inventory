@@ -78,7 +78,7 @@ namespace Inventory.JobPages
 
             foreach (JobConsumption item in jobConsumption)
             {
-                if (item.State == (int)StateLookup.StateEnum.Allocated)
+                if (item.State.stateValue == StateLookup.StateEnum.Allocated)
                 {
                     
                     finalJobConsumption.Add(new JobConsumption(item.JobID, item.RecipesID, item.LocationID, item.PartsID, item.PartsCount, item.RecipesCount, (int)StateLookup.StateEnum.Allocated, 0));
@@ -151,7 +151,7 @@ namespace Inventory.JobPages
         private Boolean checkIfAllocated(List<JobConsumption> jobConsumption)
         {
             if (jobConsumption.Count == 0) return false;
-            return (jobConsumption.Find(x => x.State == (int)StateLookup.StateEnum.Allocated) != null);
+            return (jobConsumption.Find( x => x.iCanBeAllocated() == false) != null);
         }
     }
 }

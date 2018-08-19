@@ -77,7 +77,7 @@ namespace Inventory
 
         private void setOrderToOrdered(Order item)
         {
-            if (!item.Ordered)
+            if ((!item.Ordered) && (item.Approved))
             {
                 DatabaseConnection.updateOrder(item, nameof(item.Ordered), true);
             }
@@ -93,7 +93,7 @@ namespace Inventory
 
         private void setOrderToRecived(Order item)
         {
-            if (!item.Recived)
+            if ((!item.Recived) && (item.Ordered))
             {
                 DatabaseConnection.updateOrder(item, nameof(item.Recived), true);
                 intakeOrderStock(item);
@@ -167,6 +167,37 @@ namespace Inventory
                 }
             }
             updatePage();
+        }
+
+        private void OrderDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+
+            DataTypes.Order item = (DataTypes.Order)OrderDataGrid.CurrentItem;
+            MenuItem[] menuitems = new MenuItem[10];
+            ordersDataGrid_ContextMenu.Items.CopyTo(menuitems, 0);
+
+            menuitems[0].IsEnabled = false; // approved
+            menuitems[1].IsEnabled = false; // ordered
+            menuitems[2].IsEnabled = false; // Received
+
+            if (item != null)
+            {
+                if (!item.Approved)
+                {
+                    menuitems[0].IsEnabled = true;  // Approved
+                }
+
+                if ((!item.Ordered) && (item.Approved))
+                {
+                    menuitems[1].IsEnabled = true; // Ordered
+                }
+
+                if ((!item.Recived) && (item.Ordered))
+                {
+                    menuitems[2].IsEnabled = true; // Received
+                }
+            }
+            
         }
     }
 }

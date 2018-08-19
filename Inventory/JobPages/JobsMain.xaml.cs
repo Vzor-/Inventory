@@ -25,7 +25,7 @@ namespace Inventory.JobPages
                 String i = e.AddedItems[0].ToString();
                 if (i.Contains("Overview"))
                 {
-                    ((JobsOverview)((TabItem)jobsTabControl.Items[0]).Content).updateJobs();
+                    ((JobsOverview)((TabItem)jobsTabControl.Items[0]).Content).updateJobsOverview();
                 }
             }
 

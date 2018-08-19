@@ -145,7 +145,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SourcingPages\Sourcing.xaml">
+    <Page Include="SourcingPages\SourcingMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -267,8 +267,8 @@
     <Compile Include="Reports.xaml.cs">
       <DependentUpon>Reports.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SourcingPages\Sourcing.xaml.cs">
-      <DependentUpon>Sourcing.xaml</DependentUpon>
+    <Compile Include="SourcingPages\SourcingMain.xaml.cs">
+      <DependentUpon>SourcingMain.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\GeneralDialog.xaml.cs">
       <DependentUpon>GeneralDialog.xaml</DependentUpon>

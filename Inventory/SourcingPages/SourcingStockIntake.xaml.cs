@@ -24,12 +24,13 @@ namespace Inventory
         List<DataTypes.Stock> stock = new List<DataTypes.Stock>();
         DataTypes.Stock curSelectedStock;
         int deafultStockLocation = 0;
-        
+        public bool isAllAllocated { get; private set; }
 
         public SourcingStockIntake()
         {
             InitializeComponent();
             stockGrid.ItemsSource = stock;
+            isAllAllocated = false;
         }
 
         public SourcingStockIntake(List<DataTypes.Stock> parts) : this()
@@ -55,6 +56,7 @@ namespace Inventory
             foreach (DataTypes.Stock item in stock)
             {
                 DatabaseConnection.AddStock(item);
+                isAllAllocated = true;
             }
 
             this.Close();

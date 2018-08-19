@@ -145,7 +145,7 @@ namespace Inventory
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                p.Add(new DataTypes.JobConsumption(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetString(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8)));
+                p.Add(new DataTypes.JobConsumption(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), (int?)reader.GetInt32(3), reader.GetString(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8)));
             }
             return p;
         }
@@ -163,7 +163,25 @@ namespace Inventory
             }
             return p;
         }
-        
+
+        internal static void updateJobConsumptionOutputs(Job item, StateLookup parameter)
+        {
+            String commandText = String.Format("UPDATE JobConsumption SET State = @state WHERE JobID = @JobID AND isOutput = 1 ");
+            SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+            command.Parameters.AddWithValue("@JobID", item.InternalId);
+            command.Parameters.AddWithValue("@state", (int)parameter.stateValue);
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
+        internal static void updateJobConsumptionInputs(Job item, StateLookup parameter)
+        {
+            String commandText = String.Format("UPDATE JobConsumption SET State = @state WHERE JobID = @JobID AND isOutput = 0 ");
+            SQLiteCommand command = new SQLiteCommand(commandText, dbConnection);
+            command.Parameters.AddWithValue("@JobID", item.InternalId);
+            command.Parameters.AddWithValue("@state", (int)parameter.stateValue);
+            SQLiteDataReader reader = command.ExecuteReader();
+        }
+
         internal static void updateJob(Job item, StateLookup parameter)
 		{
 		    String commandText = String.Format("UPDATE Jobs SET State = @state WHERE InternalID = @InternalID");
@@ -225,7 +243,7 @@ namespace Inventory
                 command.Parameters.AddWithValue("@PartsID", cake.PartsID);
                 command.Parameters.AddWithValue("@PartsCount", cake.PartsCount);
                 command.Parameters.AddWithValue("@RecipesCount", cake.RecipesCount);
-                command.Parameters.AddWithValue("@State", cake.State);
+                command.Parameters.AddWithValue("@State", (int)cake.State.stateValue);
                 command.Parameters.AddWithValue("@isOutput", cake.isOutput);
                 SQLiteDataReader reader = command.ExecuteReader();
                 Debug.WriteLine("addRecipesToJob pendingConsumptions row created with id: " + (int)dbConnection.LastInsertRowId);

@@ -112,7 +112,7 @@ namespace Inventory.JobPages
 
         private void applyJob_Click(object sender, RoutedEventArgs e)
         {
-            Job newJob = new Job(jobName, 0);
+            Job newJob = new Job(jobName, (int)StateLookup.StateEnum.Proposed);
             checkCanCreateJob();
             if (applyJobButton.IsEnabled == false) return;
             string entryInfo = DatabaseConnection.addJob(newJob);

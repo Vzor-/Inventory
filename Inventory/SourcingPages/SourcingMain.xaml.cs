@@ -4,11 +4,11 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Inventory
+namespace Inventory.SourcingPages
 {
-    public partial class Sourcing : UserControl
+    public partial class SourcingMain : UserControl
     {
-        public Sourcing()
+        public SourcingMain()
         {
             InitializeComponent();
             //orderGrid.ItemsSource = DatabaseConnection.getRecipes();

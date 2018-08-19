@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Inventory"
         xmlns:jobpages="clr-namespace:Inventory.JobPages"
+        xmlns:sourcingPages="clr-namespace:Inventory.SourcingPages"
         mc:Ignorable="d"
         Title="Inventory System V0.1" Height="720" Width="1080">
     <Grid Background="#272727">
@@ -19,7 +20,7 @@
                 <jobpages:JobsMain/>
             </TabItem>
             <TabItem Header="  Sourcing  ">
-                <local:Sourcing/>
+                <sourcingPages:SourcingMain/>
             </TabItem>
             <TabItem Header="  Fulfillment  ">
                 <local:Fulfillment/>
